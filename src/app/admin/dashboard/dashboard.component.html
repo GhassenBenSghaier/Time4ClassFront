@@ -1,0 +1,115 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Students Card -->
+      <div class="col-md-6">
+        <div class="card info-card">
+          <div class="card-body">
+            <h5 class="card-title">Students <span>| Overview</span></h5>
+            <div class="d-flex align-items-center mb-3">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="ps-3">
+                <h6>150</h6>
+                <span class="text-success small pt-1 fw-bold">5%</span>
+                <span class="text-muted small pt-2 ps-1">increase this week</span>
+              </div>
+            </div>
+            <div class="stats">
+              <p><strong>Total Enrolled:</strong> 150</p>
+              <p><strong>New This Month:</strong> 10</p>
+              <p><strong>Active Today:</strong> 142</p>
+              <p><strong>Absent Today:</strong> 8 <span class="text-danger small fw-bold">(5.3%)</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes Card -->
+      <div class="col-md-6">
+        <div class="card info-card">
+          <div class="card-body">
+            <h5 class="card-title">Classes <span>| Today</span></h5>
+            <div class="d-flex align-items-center mb-3">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-calendar4-week"></i>
+              </div>
+              <div class="ps-3">
+                <h6>25</h6>
+                <span class="text-success small pt-1 fw-bold">10%</span>
+                <span class="text-muted small pt-2 ps-1">increase from yesterday</span>
+              </div>
+            </div>
+            <div class="stats">
+              <p><strong>Scheduled Today:</strong> 25</p>
+              <p><strong>Ongoing Now:</strong> 6</p>
+              <p><strong>Upcoming:</strong> 15</p>
+              <p><strong>Conflicts:</strong> 2 <span class="text-warning small fw-bold">(8%)</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teachers Table -->
+      <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+          <div class="card-body">
+            <h5 class="card-title">Teachers <span>| All</span></h5>
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th>Classes Today</th>
+                  <th>Total Classes</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Ms. Amina Ben Salem</td>
+                  <td>Math</td>
+                  <td>3</td>
+                  <td>15</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>Mr. Karim Jlassi</td>
+                  <td>Science</td>
+                  <td>2</td>
+                  <td>12</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>Dr. Hedi Gharbi</td>
+                  <td>Physics</td>
+                  <td>1</td>
+                  <td>10</td>
+                  <td><span class="badge bg-warning">On Leave</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="stats mt-3">
+              <p><strong>Total Teachers:</strong> 10</p>
+              <p><strong>Active Today:</strong> 8</p>
+              <p><strong>Average Classes/Teacher:</strong> 13</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-admin-footer></app-admin-footer>
+</main>

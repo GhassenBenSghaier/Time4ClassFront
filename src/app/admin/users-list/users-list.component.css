@@ -1,0 +1,52 @@
+#main {
+  margin-left: 260px;
+  padding: 90px 30px 30px;
+  background: #f1f3f5;
+  min-height: 100vh;
+}
+.card {
+  border-radius: 12px;
+}
+.table {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.btn-primary {
+  background: #007bff;
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+.btn-primary:hover {
+  background: #0056b3;
+}
+/* Custom button styles */
+.btn-edit {
+  background: #2c3340; /* Matches sidebar gradient end */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 15px;
+  transition: background 0.3s;
+}
+.btn-edit:hover {
+  background: #1a1d29; /* Matches sidebar gradient start */
+}
+.btn-delete {
+  background: #ffffff;
+  color: #dc3545; /* Red text for contrast */
+  border: 1px solid #dc3545; /* Red border to maintain delete intent */
+  border-radius: 6px;
+  padding: 6px 15px;
+  transition: all 0.3s;
+}
+.btn-delete:hover {
+  background: #f8f9fa; /* Slight grey tint on hover */
+  color: #c82333;
+  border-color: #c82333;
+}
+@media (max-width: 991px) {
+  #main {
+    margin-left: 0;
+  }
+}

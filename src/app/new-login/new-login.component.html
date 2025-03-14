@@ -1,0 +1,233 @@
+<!-- <div class="new-login-container">
+  
+    <div class="login-card">
+      <h2 class="login-title">Welcome to Time4Class Admin</h2>
+      <p class="login-subtitle">Secure login for administrative access</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        <div class="form-group">
+          <label for="email">Username</label>
+          <input
+            type="text"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your username"
+          >
+        </div>
+  
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password"
+            >
+            <span class="toggle-password" (click)="togglePasswordVisibility()">
+              {{ hidePassword ? 'Show' : 'Hide' }}
+            </span>
+          </div>
+        </div>
+  
+        <button type="submit" class="login-button">Sign In</button>
+      </form>
+      <p class="signup-link">
+        Need an account? <a routerLink="/register">Register here</a>
+      </p>
+    </div>
+  </div> -->
+
+
+  <section id="login" class="section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Login</h2>
+      <div><span>Welcome to</span> <span class="description-title"> Time4Class</span></div>
+    </div>
+    <div class="container">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+        <!-- Display error message (success not needed for login) -->
+        <div class="form-group" *ngIf="errorMessage">
+          <span class="error">{{ errorMessage }}</span>
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="Enter your username"
+            required
+          >
+          <span class="error" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">Username is required</span>
+        </div>
+        <div class="form-group">
+          <label for="password" class="visually-hidden">Password</label>
+          <div class="password-input">
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              id="password"
+              formControlName="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            >
+            <!-- <span class="toggle-password" (click)="togglePasswordVisibility()">
+              {{ hidePassword ? 'Show' : 'Hide' }}
+            </span> -->
+          </div>
+          <span class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">Password is required</span>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">Sign In</button>
+        <p class="login-link">
+          Need an account? <a routerLink="/register">Register here</a>
+        </p>
+      </form>
+    </div>
+  </section>
+  
+  <style>
+    .section {
+      padding: 60px 0;
+    }
+  
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+  
+    .section-title {
+      text-align: center;
+      padding-bottom: 30px;
+    }
+  
+    .section-title h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      position: relative;
+    }
+  
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: #0288d1;
+      bottom: 0;
+      left: calc(50% - 25px);
+    }
+  
+    .section-title .description-title {
+      color: #0288d1;
+      font-weight: 600;
+      font-size: 24px;
+    }
+  
+    .success {
+      color: green;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+  
+    .error {
+      color: #df1529;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+  
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  
+    /* Reuse register styles with adjustments */
+    .auth-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: var(--surface-color, #fff);
+      border-radius: 8px;
+      box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+    }
+  
+    .form-group {
+      margin-bottom: 20px;
+    }
+  
+    .form-control {
+      font-size: 14px;
+      padding: 10px 15px;
+      border-radius: 0;
+      color: var(--default-color, #1a1a1a);
+      background-color: color-mix(in srgb, var(--background-color, #fff), transparent 50%);
+      border: 1px solid color-mix(in srgb, var(--default-color, #1a1a1a), transparent 80%);
+      width: 100%;
+    }
+  
+    .form-control:focus {
+      border-color: var(--accent-color, #0288d1);
+      outline: none;
+    }
+  
+    .form-control::placeholder {
+      color: color-mix(in srgb, var(--default-color, #1a1a1a), transparent 70%);
+    }
+  
+    .btn-submit {
+      color: var(--contrast-color, #fff);
+      background: var(--accent-color, #0288d1);
+      border: 0;
+      padding: 10px 30px;
+      transition: 0.4s;
+      border-radius: 50px;
+      width: 100%;
+      font-family: var(--heading-font, Arial, sans-serif);
+      font-size: 16px;
+    }
+  
+    .btn-submit:hover {
+      background: color-mix(in srgb, var(--accent-color, #0288d1), transparent 20%);
+    }
+  
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  
+    .login-link a {
+      color: var(--accent-color, #0288d1);
+    }
+  
+    .login-link a:hover {
+      color: color-mix(in srgb, var(--accent-color, #0288d1), transparent 25%);
+    }
+  
+    .password-input {
+      position: relative;
+    }
+  
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-color, #0288d1);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+  </style>

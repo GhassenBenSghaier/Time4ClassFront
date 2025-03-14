@@ -1,0 +1,132 @@
+<!-- <section id="register" class="section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Register</h2>
+    <div><span>Join</span> <span class="description-title"> Time4Class</span></div>
+  </div>
+  <div class="container">
+    <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)" class="auth-form">
+      <div class="form-group">
+        <input type="text" [(ngModel)]="fullName" name="fullName" class="form-control" placeholder="Full Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" [(ngModel)]="email" name="email" class="form-control" placeholder="Email" required email>
+      </div>
+      <div class="form-group">
+        <input type="password" [(ngModel)]="password" name="password" class="form-control" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+        <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+        <span *ngIf="password !== confirmPassword && registerForm.submitted" class="error">Passwords do not match</span>
+      </div>
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">Sign Up</button>
+      <p class="login-link">
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
+    </form>
+  </div>
+</section> -->
+
+
+
+<section id="register" class="section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Register</h2>
+    <div><span>Join</span> <span class="description-title"> Time4Class</span></div>
+  </div>
+  <div class="container">
+    <form (ngSubmit)="onRegister()" class="auth-form">
+      <!-- Display success or error message -->
+      <div class="form-group" *ngIf="successMessage">
+        <span class="success">{{ successMessage }}</span>
+      </div>
+      <div class="form-group" *ngIf="errorMessage">
+        <span class="error">{{ errorMessage }}</span>
+      </div>
+      <div class="form-group">
+        <input
+          type="text"
+          [(ngModel)]="fullName"
+          name="fullName"
+          class="form-control"
+          placeholder="Full Name"
+          required
+        >
+        <span class="error" *ngIf="isSubmitted && !fullName">Full Name is required</span>
+      </div>
+      <div class="form-group">
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          class="form-control"
+          placeholder="Email"
+          required
+        >
+        <span class="error" *ngIf="isSubmitted && !email">Email is required</span>
+      </div>
+      <div class="form-group">
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          required
+        >
+        <span class="error" *ngIf="isSubmitted && !password">Password is required</span>
+      </div>
+      <div class="form-group">
+        <input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          class="form-control"
+          placeholder="Confirm Password"
+          required
+        >
+        <span class="error" *ngIf="isSubmitted && !confirmPassword">Confirm Password is required</span>
+        <span class="error" *ngIf="isSubmitted && password !== confirmPassword">
+          Passwords do not match
+        </span>
+      </div>
+      <div class="form-group">
+        <select
+          class="form-control"
+          [(ngModel)]="role"
+          name="role"
+          required
+        >
+          <option value="" disabled selected>Select Role</option>
+          <option value="STUDENT">Student</option>
+          <option value="TEACHER">Teacher</option>
+        </select>
+        <span class="error" *ngIf="isSubmitted && !role">Role is required</span>
+      </div>
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="!fullName || !email || !password || !confirmPassword || password !== confirmPassword || !role"
+      >
+        Sign Up
+      </button>
+      <p class="login-link">
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .success {
+    color: green;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.25rem;
+  }
+</style>

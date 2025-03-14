@@ -1,0 +1,69 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Add User</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/users">Users</a></li>
+        <li class="breadcrumb-item active">Add User</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <h5 class="card-title fw-semibold text-center">Add New User</h5>
+            <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+            <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+            <form (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+              <div class="w-75">
+                <div class="mb-3 row">
+                  <label for="fullName" class="col-sm-3 col-form-label text-end">Full Name</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="fullName" [(ngModel)]="user.fullName" name="fullName" class="form-control" placeholder="Full Name" required>
+                    <small class="text-danger" *ngIf="isSubmitted && !user.fullName">Full Name is required</small>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="email" class="col-sm-3 col-form-label text-end">Email</label>
+                  <div class="col-sm-9">
+                    <input type="email" id="email" [(ngModel)]="user.email" name="email" class="form-control" placeholder="Email" required>
+                    <small class="text-danger" *ngIf="isSubmitted && !user.email">Email is required</small>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="password" class="col-sm-3 col-form-label text-end">Password</label>
+                  <div class="col-sm-9">
+                    <input type="password" id="password" [(ngModel)]="user.password" name="password" class="form-control" placeholder="Password" required>
+                    <small class="text-danger" *ngIf="isSubmitted && !user.password">Password is required</small>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="role" class="col-sm-3 col-form-label text-end">Role</label>
+                  <div class="col-sm-9">
+                    <select id="role" class="form-select" [(ngModel)]="user.role" name="role" required>
+                      <option value="" disabled selected>Select Role</option>
+                      <option value="ADMIN">Admin</option>
+                      <option value="STUDENT">Student</option>
+                      <option value="TEACHER">Teacher</option>
+                    </select>
+                    <small class="text-danger" *ngIf="isSubmitted && !user.role">Role is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-grey me-2">Add User</button>
+                <a routerLink="/admin/users" class="btn btn-outline-secondary">Cancel</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

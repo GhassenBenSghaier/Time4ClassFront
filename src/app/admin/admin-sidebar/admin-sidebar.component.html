@@ -1,0 +1,65 @@
+<!-- 
+
+  <aside id="sidebar" class="sidebar d-flex flex-column">
+    <ul class="sidebar-nav list-unstyled p-3 flex-grow-1">
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" routerLink="/admin" routerLinkActive="active">
+          <i class="bi bi-grid me-3"></i><span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center" data-bs-toggle="collapse" href="#users-nav">
+          <i class="bi bi-person me-3"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="users-nav" class="nav-content collapse list-unstyled">
+          <li><a routerLink="/admin/users" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> All Users</a></li>
+          <li><a routerLink="/admin/users/add" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> Add User</a></li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" routerLink="/admin/timetables" routerLinkActive="active">
+          <i class="bi bi-calendar4-week me-3"></i><span>Timetable</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" routerLink="/admin/calendar">
+          <i class="bi bi-calendar me-3"></i><span>Calendar</span>
+        </a>
+      </li>
+    </ul>
+  </aside> -->
+
+  <aside id="sidebar" class="sidebar d-flex flex-column">
+    <ul class="sidebar-nav list-unstyled p-3 flex-grow-1">
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" 
+           routerLink="/admin" 
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-grid me-3"></i><span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center" data-bs-toggle="collapse" href="#users-nav">
+          <i class="bi bi-person me-3"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="users-nav" class="nav-content collapse list-unstyled">
+          <li><a routerLink="/admin/users" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> All Users</a></li>
+          <li><a routerLink="/admin/users/add" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> Add User</a></li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" 
+           routerLink="/admin/timetables" 
+           routerLinkActive="active">
+          <i class="bi bi-calendar4-week me-3"></i><span>Timetables</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" 
+           routerLink="/admin/calendar" >
+          <i class="bi bi-calendar me-3"></i><span>Calendar</span>
+        </a>
+      </li>
+    </ul>
+</aside>

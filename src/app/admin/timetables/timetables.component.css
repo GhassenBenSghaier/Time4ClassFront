@@ -1,0 +1,59 @@
+#main {
+  margin-left: 260px;
+  padding: 90px 30px 30px;
+  background: #f1f3f5;
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.timetable-container {
+  margin: 20px 0;
+}
+
+.timetable {
+  width: 100%;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+td {
+  min-width: 150px;
+  vertical-align: top;
+}
+
+/* Custom button styles */
+.btn-edit {
+  background: #2c3340; /* Matches sidebar gradient end */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 15px;
+  transition: background 0.3s;
+}
+
+.btn-edit:hover {
+  background: #1a1d29; /* Matches sidebar gradient start */
+}
+
+@media (max-width: 991px) {
+  #main {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,13 @@
+/* Target the FullCalendar element */
+full-calendar {
+    max-width: 600px; /* Smaller width (adjust as needed) */
+    height: 400px;    /* Smaller height (adjust as needed) */
+    margin: 0 auto;   /* Center it within the container */
+  }
+  
+  /* Ensure the section and container don’t override */
+  #calendar .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }

@@ -1,0 +1,239 @@
+/* admin-dashboard.css */
+
+/* General Layout */
+.nice-admin {
+  background: #E8ECEF; /* Your Time4Class background */
+  font-family: "Roboto", sans-serif; /* Your default font */
+  color: #2C3E50; /* Your default text color */
+}
+
+/* Header */
+.nice-admin .header {
+  background: #2C3E50; /* Dark blue-gray from your style.css */
+  color: #ffffff;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nice-admin .header .logo span {
+  font-size: 24px;
+  font-family: "Raleway", sans-serif; /* Your heading font */
+  font-weight: 700;
+}
+
+.nice-admin .header .toggle-sidebar-btn {
+  font-size: 28px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.nice-admin .header .nav-icon {
+  color: #ffffff;
+  font-size: 22px;
+  margin-left: 20px;
+}
+
+/* Sidebar */
+.nice-admin .sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 250px;
+  height: calc(100% - 60px);
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.nice-admin .sidebar .nav-link {
+  display: block;
+  padding: 10px 15px;
+  color: #2C3E50;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif; /* Your nav font */
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.nice-admin .sidebar .nav-link:hover,
+.nice-admin .sidebar .nav-link.active {
+  background: #E67E22; /* Your accent color */
+  color: #ffffff;
+}
+
+/* Main Content */
+.nice-admin #main {
+  margin-left: 250px; /* Space for sidebar */
+  padding: 80px 20px 20px 20px; /* Top padding for header */
+  min-height: 100vh;
+}
+
+.nice-admin .pagetitle {
+  margin-bottom: 20px;
+}
+
+.nice-admin .pagetitle h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A5276; /* Your heading color */
+  font-family: "Raleway", sans-serif;
+}
+
+/* Cards */
+.nice-admin .dashboard .card {
+  background: #ffffff;
+  border-radius: 8px; /* Your shape */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.nice-admin .dashboard .card-body {
+  padding: 0;
+}
+
+.nice-admin .dashboard .info-card h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A5276;
+  margin-bottom: 10px;
+}
+
+.nice-admin .dashboard .info-card h5 span {
+  font-size: 14px;
+  color: #2C3E50;
+  font-weight: normal;
+}
+
+.nice-admin .dashboard .info-card h6 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.nice-admin .dashboard .card-icon {
+  width: 50px;
+  height: 50px;
+  background: #E67E22; /* Your accent */
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+/* Table */
+.nice-admin .dashboard .recent-sales {
+  overflow-x: auto;
+}
+
+.nice-admin .dashboard .recent-sales .table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nice-admin .dashboard .recent-sales th,
+.nice-admin .dashboard .recent-sales td {
+  padding: 10px;
+  text-align: left;
+}
+
+.nice-admin .dashboard .recent-sales th {
+  background: #F9F9F9; /* Your surface color */
+  font-weight: 600;
+  color: #1A5276;
+}
+
+.nice-admin .dashboard .recent-sales .badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+/* Team Section */
+.nice-admin .dashboard .section-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.nice-admin .dashboard .section-title h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #E67E22;
+  background: color-mix(in srgb, #E67E22, transparent 90%);
+  padding: 5px 15px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.nice-admin .dashboard .section-title div {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A5276;
+  margin-top: 10px;
+}
+
+.nice-admin .dashboard .section-title .description-title {
+  color: #E67E22;
+}
+
+.nice-admin .dashboard .member {
+  text-align: center;
+  padding: 15px;
+}
+
+.nice-admin .dashboard .member img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.nice-admin .dashboard .member h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 10px 0 5px;
+}
+
+.nice-admin .dashboard .member span {
+  font-size: 14px;
+  color: #666;
+}
+
+.nice-admin .dashboard .member .social a {
+  color: #2C3E50;
+  font-size: 18px;
+  margin: 0 5px;
+  transition: color 0.3s;
+}
+
+.nice-admin .dashboard .member .social a:hover {
+  color: #E67E22;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+  .nice-admin .sidebar {
+    left: -250px;
+    transition: left 0.3s;
+  }
+  .nice-admin #main {
+    margin-left: 0;
+  }
+  .nice-admin.toggle-sidebar .sidebar {
+    left: 0;
+  }
+}

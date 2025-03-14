@@ -1,0 +1,102 @@
+.carousel {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.carousel-inner {
+  overflow: hidden;
+}
+
+.carousel-item {
+  display: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-item.active {
+  display: block;
+  opacity: 1;
+}
+
+.testimonial-item {
+  text-align: center;
+}
+
+.testimonial-img {
+  width: 100px;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, 0.15);
+  margin: 0 auto;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+  color: var(--default-color);
+}
+
+h4 {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 15px 0;
+}
+
+p {
+  font-style: italic;
+  margin: 0 auto 15px auto;
+  color: var(--default-color);
+}
+
+.quote-icon-left, .quote-icon-right {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 26px;
+  line-height: 0;
+}
+
+.quote-icon-left {
+  display: inline-block;
+  left: -5px;
+  position: relative;
+}
+
+.quote-icon-right {
+  display: inline-block;
+  right: -5px;
+  position: relative;
+  top: 10px;
+  transform: scale(-1, -1);
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.carousel-control-prev, .carousel-control-next {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--default-color);
+  cursor: pointer;
+  padding: 0 15px;
+}
+
+.carousel-indicators {
+  display: flex;
+  gap: 10px;
+}
+
+.carousel-indicators span {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.carousel-indicators span.active {
+  background: #007bff; /* Active dot color */
+}
