@@ -17,8 +17,8 @@ export interface Schedule {
 })
 export class TimetablesService {
 
-  private apiUrl = 'http://localhost:9999/api/timetable-service/generate';
-
+//  private apiUrl = 'http://localhost:9999/api/timetable-service/generate';
+  private apiUrl = 'http://api.time4class.com:30080/api/timetable-service/generate';
   constructor(private http: HttpClient) {}
 
   getSchedules(numClasses: number = 10): Observable<Schedule[][]> {
