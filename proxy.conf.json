@@ -1,8 +1,10 @@
 {
     "/api/*": {
-      "target": "http://localhost:9999",
+      "target": "http://api.time4class.com:30080",
       "secure": false,
       "logLevel": "debug",
       "changeOrigin": true
     }
   }
+
+  
