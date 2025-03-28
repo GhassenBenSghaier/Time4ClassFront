@@ -1,61 +1,239 @@
-.auth-form {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: var(--surface-color);
-  border-radius: 8px;
-  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+/* Full-page container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5; /* Light gray background with subtle pattern */
+  position: relative;
+  overflow: hidden;
 }
 
+/* Centered Window */
+.login-window {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.header .flag {
+  width: 40px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.header h1 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: left;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Window Content: Split into Left and Right */
+.window-content {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Left Side: Background Image with Logo */
+.image-section {
+  flex: 1;
+  /*background-image: url('assets/images/img/school.jpg'); /* Set school.jpg as background */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px; /* Increase height to make the image larger */
+}
+
+.image-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7); /* White overlay to fade the background */
+}
+
+.logo-overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  max-width: 487px; /* Adjust size of the logo_min_educ_fr */
+  height: auto;
+}
+
+/* Right Side: Login Form */
+.form-section {
+  flex: 1;
+  padding: 30px;
+  background: #fff;
+}
+
+.form-section h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ff6200; /* Orange underline */
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+/* Form Group */
 .form-group {
   margin-bottom: 20px;
 }
 
+.form-group label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.form-group label i {
+  margin-right: 8px;
+  color: #666;
+}
+
 .form-control {
-  font-size: 14px;
-  padding: 10px 15px;
-  border-radius: 0;
-  color: var(--default-color);
-  background-color: color-mix(in srgb, var(--background-color), transparent 50%);
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 80%);
   width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s;
 }
 
 .form-control:focus {
-  border-color: var(--accent-color);
   outline: none;
+  border-color: #ff6200; /* Orange border on focus */
+  box-shadow: 0 0 5px rgba(255, 98, 0, 0.2);
 }
 
-.form-control::placeholder {
-  color: color-mix(in srgb, var(--default-color), transparent 70%);
+.form-control.is-invalid {
+  border-color: #dc3545;
 }
 
-.btn-submit {
-  color: var(--contrast-color);
-  background: var(--accent-color);
-  border: 0;
-  padding: 10px 30px;
-  transition: 0.4s;
-  border-radius: 50px;
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+/* Password Field with Toggle */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+/* Submit Button */
+.btn-primary {
   width: 100%;
-  font-family: var(--heading-font);
-  font-size: 16px;
+  padding: 12px;
+  background-color: #28a745; /* Green button */
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  transition: background-color 0.3s;
 }
 
-.btn-submit:hover {
-  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+.btn-primary:hover {
+  background-color: #218838;
 }
 
-.signup-link {
+.btn-primary:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Error Message */
+.alert-danger {
+  font-size: 0.875rem;
+  padding: 10px;
   text-align: center;
-  margin-top: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-window {
+    width: 90%;
+  }
+
+  .window-content {
+    flex-direction: column;
+  }
+
+  .image-section {
+    height: 300px; /* Adjusted height for mobile */
+  }
+
+  .logo {
+    max-width: 150px; /* Smaller logo on mobile */
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 0.9rem;
+  }
+
+  .header .flag {
+    width: 30px;
+  }
+}
+
+.alert-danger {
+  text-align: center;
   font-size: 14px;
 }
 
-.signup-link a {
-  color: var(--accent-color);
-}
-
-.signup-link a:hover {
-  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+.alert-danger:contains('Your account is suspended') {
+  background-color: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
 }

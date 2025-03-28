@@ -1,55 +1,3 @@
-<!-- <app-admin-header></app-admin-header>
-<app-admin-sidebar></app-admin-sidebar>
-<main id="main" class="main">
-  <div class="pagetitle">
-    <h1>Users</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
-        <li class="breadcrumb-item active">Users</li>
-      </ol>
-    </nav>
-  </div>
-  <section class="section">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card recent-sales overflow-auto">
-          <div class="card-body">
-            <h5 class="card-title">All Users <span>| Total: {{ users.length }}</span></h5>
-            <table class="table table-borderless datatable">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of users; let i = index">
-                  <th scope="row">{{ i + 1 }}</th>
-                  <td>{{ user.username }}</td>
-                  <td>{{ user.role }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-primary" (click)="editUser(user)">Edit</button>
-                    <button class="btn btn-sm btn-danger ms-1" (click)="deleteUser(user)">Delete</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="mt-3">
-              <button class="btn btn-primary" routerLink="/admin/users/add">Add New User</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-<app-admin-footer></app-admin-footer> -->
-
 <app-admin-header></app-admin-header>
 <app-admin-sidebar></app-admin-sidebar>
 <main id="main" class="main">
@@ -65,39 +13,238 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-        <div class="card recent-sales shadow-sm border-0">
-          <div class="card-body p-4">
-            <h5 class="card-title fw-semibold">All Users <span class="text-muted">| Total: {{ users.length }}</span></h5>
-            <table class="table table-hover">
-              <thead class="bg-light">
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Email</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of users; let i = index">
-                  <th>{{ i + 1 }}</th>
-                  <td>{{ user.username }}</td>
-                  <td>{{ user.role }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-edit me-2" (click)="editUser(user)">Edit</button>
-                    <button class="btn btn-sm btn-delete" (click)="deleteUser(user)">Delete</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="mt-3">
-              <button class="btn btn-sm btn-edit me-2" routerLink="/admin/users/add">Add New User</button>
+        <div class="framed-content shadow-sm">
+          <div class="card-title-container">
+            <h5 class="card-title fw-semibold">All Users <span class="text-muted">| Total: {{ filteredUsers.length }}</span></h5>
+            <div class="action-icons">
+              <i class="fas fa-search btn-icon btn-search me-2" (click)="toggleSearch()" title="Toggle Search"></i>
+              <i class="fas fa-user-plus btn-icon btn-add me-2" routerLink="/admin/users/add" title="Add New User"></i>
+              <i class="fas fa-eye-slash btn-icon btn-toggle-deactivated me-2" (click)="toggleDeactivated()" [ngClass]="{'btn-active': showDeactivated}" title="Show Deactivated Users"></i>
             </div>
           </div>
+          <!-- Search Form (Toggled) -->
+          <form [formGroup]="searchForm" class="mb-4" *ngIf="showSearch">
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="username" class="form-control" placeholder="Search by Username">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="firstName" class="form-control" placeholder="Search by First Name">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="lastName" class="form-control" placeholder="Search by Last Name">
+              </div>
+              <div class="col-md-3 mb-3">
+                <select formControlName="role" class="form-select">
+                  <option value="">All Roles</option>
+                  <option value="CENTRAL_ADMIN">Central Admin</option>
+                  <option value="LOCAL_ADMIN">Local Admin</option>
+                  <option value="TEACHER">Teacher</option>
+                  <option value="STUDENT">Student</option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="profileDesignation" class="form-control" placeholder="Search by Profile Name">
+              </div>
+            </div>
+            <!-- Role-Specific Fields -->
+            <div *ngIf="searchForm.get('role')?.value === 'CENTRAL_ADMIN'" class="row">
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="department" class="form-control" placeholder="Department">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="accessLevel" class="form-control" placeholder="Access Level">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="employeeId" class="form-control" placeholder="Employee ID">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="date" formControlName="hireDate" class="form-control" placeholder="Hire Date">
+              </div>
+            </div>
+            <div *ngIf="searchForm.get('role')?.value === 'LOCAL_ADMIN'" class="row">
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="adminCode" class="form-control" placeholder="Admin Code">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="employeeId" class="form-control" placeholder="Employee ID">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="date" formControlName="hireDate" class="form-control" placeholder="Hire Date">
+              </div>
+            </div>
+            <div *ngIf="searchForm.get('role')?.value === 'TEACHER'" class="row">
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="subjectSpecialization" class="form-control" placeholder="Subject">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="qualification" class="form-control" placeholder="Qualification">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="teacherRank" class="form-control" placeholder="Teacher Rank">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="employeeId" class="form-control" placeholder="Employee ID">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="date" formControlName="hireDate" class="form-control" placeholder="Hire Date">
+              </div>
+            </div>
+            <div *ngIf="searchForm.get('role')?.value === 'STUDENT'" class="row">
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="studentId" class="form-control" placeholder="Student ID">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="date" formControlName="enrollmentDate" class="form-control" placeholder="Enrollment Date">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="gradeLevel" class="form-control" placeholder="Grade Level">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="schoolClass" class="form-control" placeholder="School Class">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="parentName" class="form-control" placeholder="Parent Name">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="parentContact" class="form-control" placeholder="Parent Contact">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="previousSchool" class="form-control" placeholder="Previous School">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="medicalConditions" class="form-control" placeholder="Medical Conditions">
+              </div>
+              <div class="col-md-3 mb-3">
+                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+              </div>
+            </div>
+          </form>
+          <!-- Users Table -->
+          <table class="table table-hover">
+            <thead class="bg-light">
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Profile</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of getPaginatedUsers(); let i = index">
+                <th>{{ (currentPage - 1) * pageSize + i + 1 }}</th>
+                <td>{{ user.username }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.profile?.designation || user.profileCode || 'N/A' }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                  <i class="fas fa-info-circle btn-icon btn-details me-2" (click)="viewDetails(user)" title="View Details"></i>
+                  <i class="fas fa-edit btn-icon btn-edit me-2" (click)="editUser(user)" title="Edit User"></i>
+                  <i class="fas fa-ban btn-icon btn-deactivate me-2" (click)="deactivateUser(user)" title="Deactivate User" *ngIf="user.status !== 'Suspended'"></i>
+                  <i class="fas fa-trash-alt btn-icon btn-delete" (click)="deleteUser(user)" title="Delete User" *ngIf="user.status === 'Suspended'"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Area -->
+        <div class="pagination-area" *ngIf="totalPages > 1">
+          <button class="btn btn-pagination" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-pagination" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Deactivate Confirmation Modal -->
+  <div class="modal fade" id="deactivateConfirmModal" tabindex="-1" aria-labelledby="deactivateConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deactivateConfirmModalLabel">Confirm Deactivation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by deactivateUser -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmDeactivate(false)">Cancel</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmDeactivate(true)">Deactivate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by deleteUser -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmDelete(false)">Cancel</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmDelete(true)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showSuccessModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showErrorModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 <app-admin-footer></app-admin-footer>

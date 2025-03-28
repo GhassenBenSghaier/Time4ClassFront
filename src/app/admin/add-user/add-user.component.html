@@ -13,53 +13,329 @@
   </div>
   <section class="section">
     <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="card shadow-sm border-0">
-          <div class="card-body p-4">
-            <h5 class="card-title fw-semibold text-center">Add New User</h5>
-            <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
-            <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
-            <form (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
-              <div class="w-75">
+      <div class="col-lg-10">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Add New User</h5>
+          <form (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+            <div class="w-100">
+              <!-- Common Fields -->
+              <div class="mb-3 row">
+                <div class="col-4">
+                  <label for="username" class="col-form-label">
+                    Username <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="text" id="username" [(ngModel)]="user.username" name="username" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="firstName" class="col-form-label">
+                    First Name <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="text" id="firstName" [(ngModel)]="user.firstName" name="firstName" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="lastName" class="col-form-label">
+                    Last Name <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="text" id="lastName" [(ngModel)]="user.lastName" name="lastName" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="email" class="col-form-label">
+                    Email <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="email" id="email" [(ngModel)]="user.email" name="email" class="form-control" required>
+                </div>
+                <div class="col-6">
+                  <label for="password" class="col-form-label">
+                    Password <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="password" id="password" [(ngModel)]="user.password" name="password" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="birthdate" class="col-form-label">Birthdate</label>
+                  <input type="date" id="birthdate" [(ngModel)]="user.birthdate" name="birthdate" class="form-control">
+                </div>
+                <div class="col-6">
+                  <label for="gender" class="col-form-label">Gender</label>
+                  <select id="gender" class="form-select" [(ngModel)]="user.gender" name="gender">
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-12">
+                  <label for="address" class="col-form-label">Address</label>
+                  <input type="text" id="address" [(ngModel)]="user.address" name="address" class="form-control">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="phoneNumber" class="col-form-label">Phone Number</label>
+                  <input type="text" id="phoneNumber" [(ngModel)]="user.phoneNumber" name="phoneNumber" class="form-control">
+                </div>
+                <div class="col-6">
+                  <label for="role" class="col-form-label">
+                    Role <span class="required-asterisk">*</span>
+                  </label>
+                  <select id="role" class="form-select" [(ngModel)]="user.role" name="role" required (change)="onRoleChange($event)">
+                    <option value="" disabled selected>Select Role</option>
+                    <option *ngFor="let role of allRoles" [value]="role">{{ role | titlecase }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="profile" class="col-form-label">
+                    Profile <span class="required-asterisk">*</span>
+                  </label>
+                  <select id="profile" class="form-select" [(ngModel)]="user.profileCode" name="profile" required>
+                    <option value="" disabled selected>Select Profile</option>
+                    <option *ngFor="let profile of allowedProfiles" [value]="profile.code">{{ profile.designation }}</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label for="status" class="col-form-label">
+                    Status <span class="required-asterisk">*</span>
+                  </label>
+                  <select id="status" class="form-select" [(ngModel)]="user.status" name="status" required>
+                    <option value="Active">Active</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Suspended">Suspended</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Central Admin Fields -->
+              <div *ngIf="user.role === 'CENTRAL_ADMIN'">
                 <div class="mb-3 row">
-                  <label for="fullName" class="col-sm-3 col-form-label text-end">Full Name</label>
-                  <div class="col-sm-9">
-                    <input type="text" id="fullName" [(ngModel)]="user.fullName" name="fullName" class="form-control" placeholder="Full Name" required>
-                    <small class="text-danger" *ngIf="isSubmitted && !user.fullName">Full Name is required</small>
+                  <div class="col-6">
+                    <label for="department" class="col-form-label">Department</label>
+                    <input type="text" id="department" [(ngModel)]="user.department" name="department" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="accessLevel" class="col-form-label">Access Level</label>
+                    <input type="text" id="accessLevel" [(ngModel)]="user.accessLevel" name="accessLevel" class="form-control">
                   </div>
                 </div>
                 <div class="mb-3 row">
-                  <label for="email" class="col-sm-3 col-form-label text-end">Email</label>
-                  <div class="col-sm-9">
-                    <input type="email" id="email" [(ngModel)]="user.email" name="email" class="form-control" placeholder="Email" required>
-                    <small class="text-danger" *ngIf="isSubmitted && !user.email">Email is required</small>
+                  <div class="col-6">
+                    <label for="employeeId" class="col-form-label">
+                      Employee ID <span class="required-asterisk">*</span>
+                    </label>
+                    <input type="text" id="employeeId" [(ngModel)]="user.employeeId" name="employeeId" class="form-control" required>
                   </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="password" class="col-sm-3 col-form-label text-end">Password</label>
-                  <div class="col-sm-9">
-                    <input type="password" id="password" [(ngModel)]="user.password" name="password" class="form-control" placeholder="Password" required>
-                    <small class="text-danger" *ngIf="isSubmitted && !user.password">Password is required</small>
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="role" class="col-sm-3 col-form-label text-end">Role</label>
-                  <div class="col-sm-9">
-                    <select id="role" class="form-select" [(ngModel)]="user.role" name="role" required>
-                      <option value="" disabled selected>Select Role</option>
-                      <option value="ADMIN">Admin</option>
-                      <option value="STUDENT">Student</option>
-                      <option value="TEACHER">Teacher</option>
-                    </select>
-                    <small class="text-danger" *ngIf="isSubmitted && !user.role">Role is required</small>
+                  <div class="col-6">
+                    <label for="hireDate" class="col-form-label">Hire Date</label>
+                    <input type="date" id="hireDate" [(ngModel)]="user.hireDate" name="hireDate" class="form-control">
                   </div>
                 </div>
               </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-grey me-2">Add User</button>
-                <a routerLink="/admin/users" class="btn btn-outline-secondary">Cancel</a>
+              <!-- Local Admin Fields -->
+              <div *ngIf="user.role === 'LOCAL_ADMIN'">
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="schoolName" class="col-form-label">
+                      School Name <span class="required-asterisk">*</span>
+                    </label>
+                    <input type="text" id="schoolName" [(ngModel)]="user.schoolName" name="schoolName" class="form-control" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="adminCode" class="col-form-label">Admin Code</label>
+                    <input type="text" id="adminCode" [(ngModel)]="user.adminCode" name="adminCode" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="employeeId" class="col-form-label">Employee ID</label>
+                    <input type="text" id="employeeId" [(ngModel)]="user.employeeId" name="employeeId" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="hireDate" class="col-form-label">Hire Date</label>
+                    <input type="date" id="hireDate" [(ngModel)]="user.hireDate" name="hireDate" class="form-control">
+                  </div>
+                </div>
               </div>
-            </form>
+              <!-- Teacher Fields -->
+              <div *ngIf="user.role === 'TEACHER'">
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="subjectSpecialization" class="col-form-label">
+                      Subject <span class="required-asterisk">*</span>
+                    </label>
+                    <input type="text" id="subjectSpecialization" [(ngModel)]="user.subjectSpecialization" name="subjectSpecialization" class="form-control" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="employeeId" class="col-form-label">Employee ID</label>
+                    <input type="text" id="employeeId" [(ngModel)]="user.employeeId" name="employeeId" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="hireDate" class="col-form-label">Hire Date</label>
+                    <input type="date" id="hireDate" [(ngModel)]="user.hireDate" name="hireDate" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="qualification" class="col-form-label">Qualification</label>
+                    <input type="text" id="qualification" [(ngModel)]="user.qualification" name="qualification" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="department" class="col-form-label">Department</label>
+                    <input type="text" id="department" [(ngModel)]="user.department" name="department" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="teacherRank" class="col-form-label">Teacher Rank</label>
+                    <input type="text" id="teacherRank" [(ngModel)]="user.teacherRank" name="teacherRank" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-12">
+                    <label for="schoolNameTeacher" class="col-form-label">School Name</label>
+                    <input type="text" id="schoolNameTeacher" [(ngModel)]="user.schoolNameTeacher" name="schoolNameTeacher" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <!-- Student Fields -->
+              <div *ngIf="user.role === 'STUDENT'">
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="studentId" class="col-form-label">
+                      Student ID <span class="required-asterisk">*</span>
+                    </label>
+                    <input type="text" id="studentId" [(ngModel)]="user.studentId" name="studentId" class="form-control" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="enrollmentDate" class="col-form-label">Enrollment Date</label>
+                    <input type="date" id="enrollmentDate" [(ngModel)]="user.enrollmentDate" name="enrollmentDate" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="gradeLevel" class="col-form-label">Grade Level</label>
+                    <input type="text" id="gradeLevel" [(ngModel)]="user.gradeLevel" name="gradeLevel" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="schoolClass" class="col-form-label">School Class</label>
+                    <input type="text" id="schoolClass" [(ngModel)]="user.schoolClass" name="schoolClass" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-6">
+                    <label for="parentName" class="col-form-label">Parent Name</label>
+                    <input type="text" id="parentName" [(ngModel)]="user.parentName" name="parentName" class="form-control">
+                  </div>
+                  <div class="col-6">
+                    <label for="parentContact" class="col-form-label">Parent Contact</label>
+                    <input type="text" id="parentContact" [(ngModel)]="user.parentContact" name="parentContact" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-12">
+                    <label for="previousSchool" class="col-form-label">Previous School</label>
+                    <input type="text" id="previousSchool" [(ngModel)]="user.previousSchool" name="previousSchool" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-12">
+                    <label for="medicalConditions" class="col-form-label">Medical Conditions</label>
+                    <input type="text" id="medicalConditions" [(ngModel)]="user.medicalConditions" name="medicalConditions" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-12">
+                    <label for="schoolNameStudent" class="col-form-label">School Name</label>
+                    <input type="text" id="schoolNameStudent" [(ngModel)]="user.schoolNameStudent" name="schoolNameStudent" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <i class="fas fa-user-plus btn-icon btn-add me-2" (click)="onSubmit()" title="Add User"></i>
+              <i class="fas fa-times btn-icon btn-cancel" routerLink="/admin/users" title="Cancel"></i>
+            </div>
+            <div class="text-center mt-2">
+              <small class="text-muted">* Required fields: Username, First Name, Last Name, Email, Password, Role, Status, Profile<br>
+              Role-specific: Employee ID (Central Admin), School Name (Local Admin), Subject (Teacher), Student ID (Student)</small>
+            </div>
+          </form>
+
+          <!-- Confirmation Modal -->
+          <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="confirmModalLabel">Confirm Submission</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to add this user?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSubmit(true)">Yes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Modal -->
+          <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="successModalLabel">Success</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Dynamic content set by showSuccessModal -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Modal -->
+          <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Dynamic content set by showErrorModal -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permission Denied Modal -->
+          <div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="permissionModalLabel">Permission Denied</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Dynamic content set by showPermissionErrorModal -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

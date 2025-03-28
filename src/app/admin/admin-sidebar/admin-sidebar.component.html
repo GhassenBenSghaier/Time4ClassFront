@@ -1,65 +1,40 @@
-<!-- 
-
-  <aside id="sidebar" class="sidebar d-flex flex-column">
-    <ul class="sidebar-nav list-unstyled p-3 flex-grow-1">
+<aside id="sidebar" class="sidebar d-flex flex-column">
+  <ul class="sidebar-nav list-unstyled p-3 flex-grow-1">
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <i class="bi bi-grid me-3"></i><span>Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" routerLink="/admin/users" routerLinkActive="active">
+        <i class="bi bi-person me-3"></i><span>Users</span>
+      </a>
+    </li>
+    <!-- Show Profiles only for CENTRAL_ADMIN -->
+    <li class="nav-item" *ngIf="isCentralAdmin">
+      <a class="nav-link d-flex align-items-center" routerLink="/admin/profiles-list" routerLinkActive="active">
+        <i class="bi bi-shield-lock me-3"></i><span>Profiles</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" routerLink="/admin/timetables" routerLinkActive="active">
+        <i class="bi bi-calendar4-week me-3"></i><span>Timetables</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" routerLink="/admin/calendar">
+        <i class="bi bi-calendar me-3"></i><span>Calendar</span>
+      </a>
+    </li>
+  </ul>
+  <div class="sidebar-footer p-3">
+    <!-- Removed <li> and added list-unstyled to a new <ul> -->
+    <ul class="list-unstyled">
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" routerLink="/admin" routerLinkActive="active">
-          <i class="bi bi-grid me-3"></i><span>Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed d-flex align-items-center" data-bs-toggle="collapse" href="#users-nav">
-          <i class="bi bi-person me-3"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="users-nav" class="nav-content collapse list-unstyled">
-          <li><a routerLink="/admin/users" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> All Users</a></li>
-          <li><a routerLink="/admin/users/add" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> Add User</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" routerLink="/admin/timetables" routerLinkActive="active">
-          <i class="bi bi-calendar4-week me-3"></i><span>Timetable</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" routerLink="/admin/calendar">
-          <i class="bi bi-calendar me-3"></i><span>Calendar</span>
-        </a>
-      </li>
-    </ul>
-  </aside> -->
-
-  <aside id="sidebar" class="sidebar d-flex flex-column">
-    <ul class="sidebar-nav list-unstyled p-3 flex-grow-1">
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" 
-           routerLink="/admin" 
-           routerLinkActive="active"
-           [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-grid me-3"></i><span>Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed d-flex align-items-center" data-bs-toggle="collapse" href="#users-nav">
-          <i class="bi bi-person me-3"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="users-nav" class="nav-content collapse list-unstyled">
-          <li><a routerLink="/admin/users" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> All Users</a></li>
-          <li><a routerLink="/admin/users/add" routerLinkActive="active" class="nav-link"><i class="bi bi-circle me-2"></i> Add User</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" 
-           routerLink="/admin/timetables" 
-           routerLinkActive="active">
-          <i class="bi bi-calendar4-week me-3"></i><span>Timetables</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center" 
-           routerLink="/admin/calendar" >
-          <i class="bi bi-calendar me-3"></i><span>Calendar</span>
+        <a class="nav-link d-flex align-items-center" (click)="logout()" style="cursor: pointer;">
+          <i class="bi bi-box-arrow-right me-3"></i><span>Logout</span>
         </a>
       </li>
     </ul>
+  </div>
 </aside>

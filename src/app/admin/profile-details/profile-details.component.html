@@ -1,0 +1,52 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Profile Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/profiles-list">Profiles</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Profile Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="profile" class="details-container">
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Code:</div>
+              <div class="col-sm-8">{{ profile.code }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Designation:</div>
+              <div class="col-sm-8">{{ profile.designation }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Status:</div>
+              <div class="col-sm-8">{{ profile.status }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Permissions:</div>
+              <div class="col-sm-8">
+                <ul class="list-unstyled">
+                  <li *ngFor="let permission of profile.permissions">
+                    {{ permission.name.replace('_', ' ') | titlecase }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Profiles"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

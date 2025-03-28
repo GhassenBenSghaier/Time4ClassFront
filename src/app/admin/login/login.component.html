@@ -1,0 +1,85 @@
+<div class="login-container">
+    <!-- Centered Window -->
+    <div class="login-window">
+      <!-- Header with Ministry and Flag -->
+      <div class="header">
+        <img src="assets/images/img/Coat_of_arms_of_Tunisia.svg.png" alt="Tunisian Flag" class="flag" />
+        <h1>TUNISIAN REPUBLIC<br />MINISTRY OF EDUCATION</h1>
+      </div>
+
+      <!-- Window Content: Split into Left (Image + Logo) and Right (Form) -->
+      <div class="window-content">
+        <!-- Left Side: Background Image with Logo -->
+        <div class="image-section">
+          <div class="logo-overlay">
+            <img src="assets/images/img/image 4.png" alt="Ministry Logo" class="logo" />
+          </div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="form-section">
+          <h2>Login</h2>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <!-- Username Field -->
+            <div class="form-group">
+              <label for="username">
+                <i class="bi bi-person"></i> Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                formControlName="username"
+                placeholder="Enter your username"
+                class="form-control"
+                [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+              />
+              <div
+                *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                class="invalid-feedback"
+              >
+                Username is required
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="password">
+                <i class="bi bi-lock"></i> Password
+              </label>
+              <div class="password-wrapper">
+                <input
+                  [type]="hidePassword ? 'password' : 'text'"
+                  id="password"
+                  formControlName="password"
+                  placeholder="••••••"
+                  class="form-control"
+                  [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                />
+                <i
+                  [class]="hidePassword ? 'bi bi-eye-slash' : 'bi bi-eye'"
+                  (click)="togglePasswordVisibility()"
+                  class="toggle-password"
+                ></i>
+              </div>
+              <div
+                *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                class="invalid-feedback"
+              >
+                Password required
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
+              LOGIN
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

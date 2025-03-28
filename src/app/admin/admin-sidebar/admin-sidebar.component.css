@@ -11,9 +11,11 @@
   transition: transform 0.3s ease;
   z-index: 999;
 }
+
 .sidebar-nav {
   margin: 0;
 }
+
 .nav-link {
   padding: 12px 20px;
   color: rgba(255, 255, 255, 0.85);
@@ -22,17 +24,32 @@
   border-radius: 6px;
   transition: all 0.3s;
 }
-.nav-link:hover, .nav-link.active {
+
+.nav-link:hover,
+.nav-link.active {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
+
 .nav-content .nav-link {
   padding: 10px 20px 10px 40px;
   font-size: 0.95rem;
 }
+
 .nav-link i {
   font-size: 1.2rem;
 }
+
+/* Footer styling for logout button */
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer .nav-item {
+  margin: 0;
+  list-style: none; /* Remove the bullet */
+}
+
 @media (max-width: 991px) {
   .sidebar {
     transform: translateX(-260px);

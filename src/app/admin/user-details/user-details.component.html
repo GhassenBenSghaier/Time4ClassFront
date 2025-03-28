@@ -1,0 +1,165 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">User Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/users">Users</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">User Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="user" class="details-container">
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Username:</div>
+              <div class="col-sm-8">{{ user.username }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Full Name:</div>
+              <div class="col-sm-8">{{ user.firstName }} {{ user.lastName }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Email:</div>
+              <div class="col-sm-8">{{ user.email }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Role:</div>
+              <div class="col-sm-8">{{ user.role }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Profile:</div>
+              <div class="col-sm-8">{{ user.profile?.designation }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Status:</div>
+              <div class="col-sm-8">{{ user.status }}</div>
+            </div>
+            <div class="row mb-3" *ngIf="user.birthdate">
+              <div class="col-sm-4 fw-bold">Birthdate:</div>
+              <div class="col-sm-8">{{ user.birthdate }}</div>
+            </div>
+            <div class="row mb-3" *ngIf="user.gender">
+              <div class="col-sm-4 fw-bold">Gender:</div>
+              <div class="col-sm-8">{{ user.gender }}</div>
+            </div>
+            <div class="row mb-3" *ngIf="user.address">
+              <div class="col-sm-4 fw-bold">Address:</div>
+              <div class="col-sm-8">{{ user.address }}</div>
+            </div>
+            <div class="row mb-3" *ngIf="user.phoneNumber">
+              <div class="col-sm-4 fw-bold">Phone Number:</div>
+              <div class="col-sm-8">{{ user.phoneNumber }}</div>
+            </div>
+            <!-- Central Admin Fields -->
+            <div *ngIf="user.role === 'CENTRAL_ADMIN'">
+              <div class="row mb-3" *ngIf="user.department">
+                <div class="col-sm-4 fw-bold">Department:</div>
+                <div class="col-sm-8">{{ user.department }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.accessLevel">
+                <div class="col-sm-4 fw-bold">Access Level:</div>
+                <div class="col-sm-8">{{ user.accessLevel }}</div>
+              </div>
+            </div>
+            <!-- Admin/Teacher Fields -->
+            <div *ngIf="user.role === 'CENTRAL_ADMIN' || user.role === 'LOCAL_ADMIN' || user.role === 'TEACHER'">
+              <div class="row mb-3" *ngIf="user.employeeId">
+                <div class="col-sm-4 fw-bold">Employee ID:</div>
+                <div class="col-sm-8">{{ user.employeeId }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.hireDate">
+                <div class="col-sm-4 fw-bold">Hire Date:</div>
+                <div class="col-sm-8">{{ user.hireDate }}</div>
+              </div>
+            </div>
+            <!-- Local Admin Fields -->
+            <div *ngIf="user.role === 'LOCAL_ADMIN'">
+              <div class="row mb-3" *ngIf="user.schoolName">
+                <div class="col-sm-4 fw-bold">School Name:</div>
+                <div class="col-sm-8">{{ user.schoolName }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.adminCode">
+                <div class="col-sm-4 fw-bold">Admin Code:</div>
+                <div class="col-sm-8">{{ user.adminCode }}</div>
+              </div>
+            </div>
+            <!-- Teacher Fields -->
+            <div *ngIf="user.role === 'TEACHER'">
+              <div class="row mb-3" *ngIf="user.subjectSpecialization">
+                <div class="col-sm-4 fw-bold">Subject Specialization:</div>
+                <div class="col-sm-8">{{ user.subjectSpecialization }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.qualification">
+                <div class="col-sm-4 fw-bold">Qualification:</div>
+                <div class="col-sm-8">{{ user.qualification }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.teacherRank">
+                <div class="col-sm-4 fw-bold">Teacher Rank:</div>
+                <div class="col-sm-8">{{ user.teacherRank }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.schoolNameTeacher">
+                <div class="col-sm-4 fw-bold">School Name:</div>
+                <div class="col-sm-8">{{ user.schoolNameTeacher }}</div>
+              </div>
+            </div>
+            <!-- Student Fields -->
+            <div *ngIf="user.role === 'STUDENT'">
+              <div class="row mb-3" *ngIf="user.studentId">
+                <div class="col-sm-4 fw-bold">Student ID:</div>
+                <div class="col-sm-8">{{ user.studentId }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.enrollmentDate">
+                <div class="col-sm-4 fw-bold">Enrollment Date:</div>
+                <div class="col-sm-8">{{ user.enrollmentDate }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.gradeLevel">
+                <div class="col-sm-4 fw-bold">Grade Level:</div>
+                <div class="col-sm-8">{{ user.gradeLevel }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.schoolClass">
+                <div class="col-sm-4 fw-bold">School Class:</div>
+                <div class="col-sm-8">{{ user.schoolClass }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.parentName">
+                <div class="col-sm-4 fw-bold">Parent Name:</div>
+                <div class="col-sm-8">{{ user.parentName }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.parentContact">
+                <div class="col-sm-4 fw-bold">Parent Contact:</div>
+                <div class="col-sm-8">{{ user.parentContact }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.previousSchool">
+                <div class="col-sm-4 fw-bold">Previous School:</div>
+                <div class="col-sm-8">{{ user.previousSchool }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.medicalConditions">
+                <div class="col-sm-4 fw-bold">Medical Conditions:</div>
+                <div class="col-sm-8">{{ user.medicalConditions }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.studentStatus">
+                <div class="col-sm-4 fw-bold">Student Status:</div>
+                <div class="col-sm-8">{{ user.studentStatus }}</div>
+              </div>
+              <div class="row mb-3" *ngIf="user.schoolNameStudent">
+                <div class="col-sm-4 fw-bold">School Name:</div>
+                <div class="col-sm-8">{{ user.schoolNameStudent }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Users"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

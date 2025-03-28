@@ -1,23 +1,5 @@
-<!--<app-header></app-header>
-<main class="main">
-  <router-outlet></router-outlet>
-
-  <ng-container *ngIf="isHomePage">
-    <app-welcome></app-welcome>
-    <app-about-us></app-about-us>
-    <app-why-us></app-why-us>
-    <app-cta></app-cta>
-    <app-services></app-services>
-    <app-team></app-team>
-    <app-testimonials></app-testimonials>
-    <app-calendar></app-calendar>
-    <app-contact></app-contact>
-  </ng-container>
-</main>
-<app-footer></app-footer>
--->
-<!-- Show regular header/footer for non-admin routes -->
-<ng-container *ngIf="!isAdminRoute">
+<!-- Show header, main content, and footer for non-admin and non-login routes -->
+<ng-container *ngIf="!isAdminRoute && !isLoginRoute">
   <app-header></app-header>
   <main class="main">
     <router-outlet></router-outlet>
@@ -25,7 +7,12 @@
   <app-footer></app-footer>
 </ng-container>
 
-<!-- Show only admin content for admin routes -->
+<!-- Show only admin content for admin routes (no header/footer) -->
 <ng-container *ngIf="isAdminRoute">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<!-- Show only login content for login route (no header/footer) -->
+<ng-container *ngIf="isLoginRoute">
   <router-outlet></router-outlet>
 </ng-container>

@@ -3,9 +3,19 @@
   border-top: 1px solid #e9ecef;
   font-size: 0.9rem;
 }
+.footer-content {
+  margin-left: 260px; /* Matches sidebar width from #main */
+  text-align: center; /* Centers text within the offset area */
+  padding: 0 30px; /* Matches #main padding for consistent spacing */
+}
 .text-primary {
   color: #007bff !important;
 }
 .footer a:hover {
   color: #0056b3;
+}
+@media (max-width: 991px) {
+  .footer-content {
+    margin-left: 0; /* Removes offset on smaller screens where sidebar collapses */
+  }
 }

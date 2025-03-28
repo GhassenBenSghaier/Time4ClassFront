@@ -4,49 +4,245 @@
   background: #f1f3f5;
   min-height: 100vh;
 }
-.card {
-  border-radius: 12px;
+.framed-content {
+  border: 2px solid #ced4da; /* Frame */
+  border-radius: 16px; /* Rounder corners (was 12px, now matches previous .card) */
+  padding: 20px; /* Inner padding */
+  background: #ffffff; /* White background */
+}
+.card-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.card-title {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.card-title span {
+  font-size: 1.2rem;
+}
+.action-icons {
+  display: flex;
+  align-items: center;
 }
 .table {
-  background: #ffffff;
+  border: 1px solid #161e26; /* Outer border for the table */
+  margin-bottom: 1;
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #ced4da; /* Add border to the table */
 }
-.btn-primary {
-  background: #007bff;
-  border-radius: 6px;
-  padding: 8px 20px;
+.table thead {
+  background-color: #e9ecef; /* Darker background color for the header */
 }
-.btn-primary:hover {
-  background: #0056b3;
+.table thead th {
+  border-bottom: 2px solid #adb5bd; /* Darker border for the header cells */
+  color: #495057; /* Darker text color for the header cells */
 }
-/* Custom button styles */
-.btn-edit {
-  background: #2c3340; /* Matches sidebar gradient end */
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 15px;
-  transition: background 0.3s;
+.table tbody tr {
+  border-bottom: 1px solid #ced4da; /* Border for each row */
 }
-.btn-edit:hover {
-  background: #1a1d29; /* Matches sidebar gradient start */
+.table tbody tr:last-child {
+  border-bottom: none;
 }
-.btn-delete {
-  background: #ffffff;
-  color: #dc3545; /* Red text for contrast */
-  border: 1px solid #dc3545; /* Red border to maintain delete intent */
-  border-radius: 6px;
-  padding: 6px 15px;
+.btn-icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
   transition: all 0.3s;
 }
+.btn-details {
+  color: #007bff;
+}
+.btn-details:hover {
+  color: #0056b3;
+}
+.btn-edit {
+  color: #2c3340;
+}
+.btn-edit:hover {
+  color: #1a1d29;
+}
+.btn-delete {
+  color: #dc3545;
+}
 .btn-delete:hover {
-  background: #f8f9fa; /* Slight grey tint on hover */
   color: #c82333;
-  border-color: #c82333;
+}
+.btn-add {
+  color: #2c3340;
+}
+.btn-add:hover {
+  color: #1a1d29;
+}
+.btn-search {
+  color: #2c3340;
+}
+.btn-search:hover {
+  color: #1a1d29;
+}
+.form-control, .form-select {
+  border-radius: 6px;
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+.pagination-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+  background: #f8f9fa;
+  border-top: 1px solid #ced4da;
+  border-radius: 0 0 12px 12px;
+  margin-top: -2px;
+}
+.btn-pagination {
+  background: none;
+  border: none;
+  color: #2c3340;
+  font-size: 1.1rem;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.btn-pagination:disabled {
+  color: #ced4da;
+  cursor: not-allowed;
+}
+.btn-pagination:hover:not(:disabled) {
+  color: #1a1d29;
+}
+.pagination-area span {
+  margin: 0 15px;
+  font-size: 1rem;
+  color: #1a1d29;
 }
 @media (max-width: 991px) {
   #main {
     margin-left: 0;
   }
+  .card-title-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .action-icons {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+}
+
+
+
+
+
+/* Assuming you have existing styles, append these */
+.btn-icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+  transition: all 0.3s;
+}
+
+.btn-deactivate {
+  color: #dc3545; /* Red to indicate action */
+}
+
+.btn-deactivate:hover {
+  color: #c82333;
+}
+
+.btn-toggle-deactivated {
+  color: #6c757d; /* Gray when off */
+}
+
+.btn-toggle-deactivated.btn-active {
+  color: #007bff; /* Blue when on */
+}
+
+.btn-toggle-deactivated:hover {
+  color: #0056b3;
+}
+
+/* Existing styles (ensure these are present) */
+.btn-details {
+  color: #17a2b8;
+}
+
+.btn-details:hover {
+  color: #117a8b;
+}
+
+.btn-edit {
+  color: #007bff;
+}
+
+.btn-edit:hover {
+  color: #0056b3;
+}
+
+.btn-search {
+  color: #6c757d;
+}
+
+.btn-search:hover {
+  color: #545b62;
+}
+
+.btn-add {
+  color: #28a745;
+}
+
+.btn-add:hover {
+  color: #1e7e34;
+}
+
+/* Existing styles remain unchanged */
+
+/* Optional: Enhance modal appearance */
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+/* Ensure existing btn-icon styles are applied */
+.btn-icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+  transition: all 0.3s;
+}
+
+.btn-deactivate {
+  color: #dc3545;
+}
+
+.btn-deactivate:hover {
+  color: #c82333;
+}
+
+.btn-toggle-deactivated {
+  color: #6c757d;
+}
+
+.btn-toggle-deactivated.btn-active {
+  color: #007bff;
+}
+
+.btn-toggle-deactivated:hover {
+  color: #0056b3;
 }

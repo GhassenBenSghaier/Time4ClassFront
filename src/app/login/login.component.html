@@ -1,22 +1,77 @@
-<section id="login" class="section">
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Login</h2>
-    <div><span>Access</span> <span class="description-title"> Time4Class</span></div>
-  </div>
-  <div class="container">
-    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" class="auth-form">
-      <div class="form-group">
-        <input type="email" [(ngModel)]="email" name="email" class="form-control" placeholder="Email" required email>
-      </div>
-      <div class="form-group">
-        <input type="password" [(ngModel)]="password" name="password" class="form-control" placeholder="Password" required>
-      </div>
-      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">Login</button>
-      <p class="signup-link">
-        Don’t have an account? <a routerLink="/register">Sign Up</a>
-      </p>
-    </form>
-  </div>
-</section> 
+<div class="login-container">
+  <div class="login-window">
+    <div class="header">
+      <img src="assets/images/img/Coat_of_arms_of_Tunisia.svg.png" alt="Tunisian Flag" class="flag" />
+      <h1>TUNISIAN REPUBLIC<br />MINISTRY OF EDUCATION</h1>
+    </div>
 
+    <div class="window-content">
+      <div class="image-section">
+        <div class="logo-overlay">
+          <img src="assets/images/img/image 4.png" alt="Ministry Logo" class="logo" />
+        </div>
+      </div>
 
+      <div class="form-section">
+        <h2>Login</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label for="username">
+              <i class="bi bi-person"></i> Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              placeholder="Enter your username"
+              class="form-control"
+              [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+            />
+            <div
+              *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+              class="invalid-feedback"
+            >
+              Username is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <i class="bi bi-lock"></i> Password
+            </label>
+            <div class="password-wrapper">
+              <input
+                [type]="hidePassword ? 'password' : 'text'"
+                id="password"
+                formControlName="password"
+                placeholder="••••••"
+                class="form-control"
+                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              />
+              <i
+                [class]="hidePassword ? 'bi bi-eye-slash' : 'bi bi-eye'"
+                (click)="togglePasswordVisibility()"
+                class="toggle-password"
+              ></i>
+            </div>
+            <div
+              *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              class="invalid-feedback"
+            >
+              Password required
+            </div>
+          </div>
+
+          <!-- Error Message with custom styling for suspension -->
+          <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
+            LOGIN
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

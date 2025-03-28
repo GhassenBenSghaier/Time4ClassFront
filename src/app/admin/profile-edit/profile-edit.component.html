@@ -1,0 +1,170 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Edit Profile</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/profiles-list">Profiles</a></li>
+        <li class="breadcrumb-item active">Edit Profile</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Edit Profile</h5>
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+            <div class="w-100">
+              <div class="mb-3 row">
+                <div class="col-4">
+                  <label for="code" class="col-form-label">
+                    Code <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="text" id="code" formControlName="code" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="designation" class="col-form-label">
+                    Designation <span class="required-asterisk">*</span>
+                  </label>
+                  <input type="text" id="designation" formControlName="designation" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="status" class="col-form-label">
+                    Status <span class="required-asterisk">*</span>
+                  </label>
+                  <select id="status" formControlName="status" class="form-select" required>
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <h4 class="mt-4">Permissions</h4>
+              <div class="accordion" id="permissionsAccordion">
+                <!-- User Management Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUserManagement">
+                      User Management Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseUserManagement" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="accordion" id="userManagementAccordion">
+                        <div class="accordion-item" *ngFor="let action of userManagementActions">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#roles-' + action">
+                              {{ action.replace('_', ' ') | titlecase }}
+                            </button>
+                          </h2>
+                          <div [id]="'roles-' + action" class="accordion-collapse collapse" [attr.data-bs-parent]="'#userManagementAccordion'">
+                            <div class="accordion-body">
+                              <div class="form-check" *ngFor="let role of roles">
+                                <input type="checkbox" class="form-check-input" [id]="action + '-' + role"
+                                       [checked]="isPermissionSelected(action, role)"
+                                       (change)="togglePermission(action, role)">
+                                <label class="form-check-label" [for]="action + '-' + role">
+                                  {{ role.replace('_', ' ') | titlecase }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Profile Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfilePermissions">
+                      Profile Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseProfilePermissions" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="form-check" *ngFor="let permission of profilePermissions">
+                        <input type="checkbox" class="form-check-input" [id]="permission"
+                               [checked]="isPermissionSelected(permission)"
+                               (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="permission">
+                          {{ permission.replace('_', ' ') | titlecase }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <i class="fas fa-save btn-icon btn-add me-2" (click)="onSubmit()" title="Save Changes"></i>
+              <i class="fas fa-times btn-icon btn-cancel" routerLink="/admin/profiles-list" title="Cancel"></i>
+            </div>
+            <div class="text-center mt-2">
+              <small class="text-muted">* Required fields: Code, Designation, Status</small>
+            </div>
+          </form>
+
+          <!-- Confirmation Modal -->
+          <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="confirmModalLabel">Confirm Changes</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to save changes to this profile?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSubmit(true)">Yes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Modal -->
+          <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="successModalLabel">Success</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Dynamic content set by showSuccessModal -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Modal -->
+          <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Dynamic content set by showErrorModal -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>
