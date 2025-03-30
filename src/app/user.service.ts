@@ -10,7 +10,9 @@ import { User } from './Models/user.model';
 })
 export class UserService {
 //  private apiUrl = 'http://localhost:9999/api/admin/users';
-  private apiUrl = 'http://api.time4class.com:30080/api/admin/users'; 
+
+//  private apiUrl = 'http://api.time4class.com:30080/api/admin/users'; 
+  private apiUrl = 'http://192.168.157.131/api/admin/users';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
