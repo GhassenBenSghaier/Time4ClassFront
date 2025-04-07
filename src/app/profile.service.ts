@@ -129,15 +129,13 @@ export interface Profile {
 export class ProfileService {
 //  private apiUrl = 'http://localhost:9999/api/admin/profiles';
 
-//  private apiUrl = 'http://api.time4class.com:30080/api/admin/profiles';
 
-  private apiUrl = 'http://192.168.157.131/api/admin/profiles';
+  private apiUrl = 'http://192.168.157.131:30000/api/admin/profiles';
 
 //  private permissionsUrl = 'http://localhost:9999/api/admin/permissions';
 
-//  private permissionsUrl ='http://api.time4class.com:30080/api/admin/permissions';
 
-  private permissionsUrl ='http://192.168.157.131/api/admin/permissions';
+  private permissionsUrl ='http://192.168.157.131:30000/api/admin/permissions';
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): { headers: HttpHeaders } {

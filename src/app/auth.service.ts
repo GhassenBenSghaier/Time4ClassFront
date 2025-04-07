@@ -109,9 +109,8 @@ import { PermissionService } from './permission.service';
 export class AuthService {
 //  private apiUrl = 'http://localhost:9999/api/auth/login';
 
-//  private apiUrl = 'http://api.time4class.com:30080/api/auth/login';
 
-  private apiUrl = 'http://192.168.157.131/api/auth/login';
+  private apiUrl = 'http://192.168.157.131:30000/api/auth/login';
 
   private tokenKey = 'authToken';
 

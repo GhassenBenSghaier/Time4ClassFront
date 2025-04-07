@@ -22,13 +22,13 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link d-flex align-items-center" routerLink="/admin/calendar">
+      <!-- Replace routerLink with click event -->
+      <a class="nav-link d-flex align-items-center" (click)="navigateToCalendar()" style="cursor: pointer;">
         <i class="bi bi-calendar me-3"></i><span>Calendar</span>
       </a>
     </li>
   </ul>
   <div class="sidebar-footer p-3">
-    <!-- Removed <li> and added list-unstyled to a new <ul> -->
     <ul class="list-unstyled">
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center" (click)="logout()" style="cursor: pointer;">

@@ -97,6 +97,26 @@
                     </div>
                   </div>
                 </div>
+                <!-- Calendar Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCalendarPermissions">
+                      Calendar Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseCalendarPermissions" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="form-check" *ngFor="let permission of calendarPermissions">
+                        <input type="checkbox" class="form-check-input" [id]="permission"
+                               [checked]="isPermissionSelected(permission)"
+                               (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="permission">
+                          {{ permission.replace('_', ' ') | titlecase }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="text-center mt-3">

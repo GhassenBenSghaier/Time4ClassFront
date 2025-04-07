@@ -9,22 +9,19 @@ export interface Schedule {
   subject: { id?: number; name?: string } | null;
   day: string;
   timeSlot: string;
-  schoolClass: { id?: number; name?: string } | null;
+  schoolClass: { id?: number; name?: string; specialty?: string } | null; // Added specialty
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimetablesService {
+//  private apiUrl = 'http://localhost:9999/api/timetable-service/generate'; 
+  private apiUrl = 'http://192.168.157.131:30000/api/timetable-service/generate';
 
-//  private apiUrl = 'http://localhost:9999/api/timetable-service/generate';
-
-//  private apiUrl = 'http://api.time4class.com:30080/api/timetable-service/generate';
-
-  private apiUrl = 'http://192.168.157.131/api/timetable-service/generate';
   constructor(private http: HttpClient) {}
 
-  getSchedules(numClasses: number = 10): Observable<Schedule[][]> {
+  getSchedules(numClasses: number = 12): Observable<Schedule[][]> { 
     return this.http.get<Schedule[][]>(`${this.apiUrl}?numClasses=${numClasses}`);
   }
 }

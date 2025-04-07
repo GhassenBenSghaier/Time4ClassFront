@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,19 +21,16 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './components/home/home.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { MatCardModule } from '@angular/material/card';
-import { matSnackBarAnimations } from '@angular/material/snack-bar';
 import { NewLoginComponent } from './new-login/new-login.component';
 import { StudentSpaceComponent } from './student-space/student-space.component';
 import { TeacherSpaceComponent } from './teacher-space/teacher-space.component';
-import { TimetablesComponent } from './admin/timetables/timetables.component';
-
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { CalendarService } from './calendar.service'; 
 
 @NgModule({
   declarations: [
@@ -59,11 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NewLoginComponent,
     StudentSpaceComponent,
     TeacherSpaceComponent,
-    
     AccessDeniedComponent
-    
-
-    
   ],
   imports: [
     BrowserModule,
@@ -73,9 +65,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     MatTableModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatCardModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, CalendarService], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

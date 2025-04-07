@@ -1,0 +1,276 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">School Calendar</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Calendar</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Create School Calendar</h5>
+          <form [formGroup]="calendarForm" (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+            <div class="w-100">
+              <!-- Basic Fields -->
+              <div class="mb-3 row">
+                <div class="col-4">
+                  <label for="schoolYear" class="col-form-label">School Year <span class="required-asterisk">*</span></label>
+                  <input id="schoolYear" formControlName="schoolYear" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="startDate" class="col-form-label">Start Date <span class="required-asterisk">*</span></label>
+                  <input id="startDate" type="date" formControlName="startDate" class="form-control" required>
+                </div>
+                <div class="col-4">
+                  <label for="endDate" class="col-form-label">End Date <span class="required-asterisk">*</span></label>
+                  <input id="endDate" type="date" formControlName="endDate" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="divisionType" class="col-form-label">Division Type <span class="required-asterisk">*</span></label>
+                  <select id="divisionType" formControlName="divisionType" class="form-select" required>
+                    <option value="" disabled selected>Division Type</option>
+                    <option value="semesters">Semesters</option>
+                    <option value="trimesters">Trimesters</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Divisions -->
+              <div *ngIf="calendarForm.get('divisionType')?.value === 'semesters' || calendarForm.get('divisionType')?.value === 'trimesters'" formArrayName="divisions" class="mb-3">
+                <h3>{{ calendarForm.get('divisionType')?.value | titlecase }}</h3>
+                <div *ngFor="let division of divisions.controls; let i=index" [formGroupName]="i" class="item-group">
+                  <div class="row">
+                    <div class="col-5">
+                      <label class="col-form-label">{{ calendarForm.get('divisionType')?.value === 'semesters' ? 'Semester' : 'Trimester' }} {{ i + 1 }} Start Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-5">
+                      <label class="col-form-label">{{ calendarForm.get('divisionType')?.value === 'semesters' ? 'Semester' : 'Trimester' }} {{ i + 1 }} End Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                      <button type="button" (click)="removeItem(divisions, i)" class="btn btn-danger w-100" [disabled]="divisions.length <= (calendarForm.get('divisionType')?.value === 'semesters' ? 2 : 3)">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Holidays -->
+              <div formArrayName="holidays" class="mb-3">
+                <h3>Holidays</h3>
+                <button type="button" (click)="addHoliday()" class="btn btn-primary mb-2">Add Holiday</button>
+                <div *ngFor="let holiday of holidays.controls; let i=index" [formGroupName]="i" class="item-group">
+                  <div class="row">
+                    <div class="col-4">
+                      <label class="col-form-label">Name <span class="required-asterisk">*</span></label>
+                      <input formControlName="name" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">Start Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">End Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                      <button type="button" (click)="removeItem(holidays, i)" class="btn btn-danger w-100">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Exam Periods -->
+              <div formArrayName="examPeriods" class="mb-3">
+                <h3>Exam Periods</h3>
+                <button type="button" (click)="addExamPeriod()" class="btn btn-primary mb-2">Add Exam Period</button>
+                <div *ngFor="let exam of examPeriods.controls; let i=index" [formGroupName]="i" class="item-group">
+                  <div class="row">
+                    <div class="col-4">
+                      <label class="col-form-label">Name <span class="required-asterisk">*</span></label>
+                      <input formControlName="name" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">Start Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">End Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                      <button type="button" (click)="removeItem(examPeriods, i)" class="btn btn-danger w-100">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Events -->
+              <div formArrayName="events" class="mb-3">
+                <h3>Events</h3>
+                <button type="button" (click)="addEvent()" class="btn btn-primary mb-2">
+                  <span class="plus-icon"></span> Add Event
+                </button>
+                <div *ngFor="let event of events.controls; let i=index" [formGroupName]="i" class="item-group">
+                  <div class="row">
+                    <div class="col-4">
+                      <label class="col-form-label">Name <span class="required-asterisk">*</span></label>
+                      <input formControlName="name" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">Start Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">End Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                      <button type="button" (click)="removeItem(events, i)" class="btn btn-danger w-100">Remove</button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-10">
+                      <label class="col-form-label">Description</label>
+                      <input formControlName="description" class="form-control" placeholder="Optional">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Milestones -->
+              <div formArrayName="milestones" class="mb-3">
+                <h3>Milestones</h3>
+                <button type="button" (click)="addMilestone()" class="btn btn-primary mb-2">Add Milestone</button>
+                <div *ngFor="let milestone of milestones.controls; let i=index" [formGroupName]="i" class="item-group">
+                  <div class="row">
+                    <div class="col-4">
+                      <label class="col-form-label">Name <span class="required-asterisk">*</span></label>
+                      <input formControlName="name" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">Date <span class="required-asterisk">*</span></label>
+                      <input type="date" formControlName="date" class="form-control" required>
+                    </div>
+                    <div class="col-3">
+                      <label class="col-form-label">Description</label>
+                      <input formControlName="description" class="form-control" placeholder="Optional">
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                      <button type="button" (click)="removeItem(milestones, i)" class="btn btn-danger w-100">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-container mt-3">
+              <div class="text-center">
+                <i class="fas fa-save btn-icon btn-add me-2" (click)="onSubmit()" title="Save Calendar"></i>
+                <i class="fas fa-times btn-icon btn-cancel" routerLink="/admin" title="Cancel"></i>
+              </div>
+              <!-- Delete Button and Dropdown -->
+              <div class="delete-section">
+                <div class="dropdown">
+                  <button class="btn btn-danger dropdown-toggle" type="button" id="deleteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Delete a School Year Calendar
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="deleteDropdown">
+                    <li *ngFor="let year of availableSchoolYears">
+                      <a class="dropdown-item" (click)="showDeleteConfirmModal(year)">{{ year }}</a>
+                    </li>
+                    <li *ngIf="availableSchoolYears.length === 0">
+                      <a class="dropdown-item disabled">No calendars available</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-2">
+              <small class="text-muted">* Required fields: School Year, Start Date, End Date, Division Type, and Name/Date fields for added items</small>
+            </div>
+          </form>
+        </div>
+
+        <!-- Calendar Display -->
+        <div *ngIf="generatedCalendar" class="framed-content shadow-sm mt-4">
+          <h5 class="card-title fw-semibold text-center">School Calendar: {{ generatedCalendar.schoolYear }}</h5>
+          <table class="calendar-table">
+            <tr *ngFor="let row of calendarRows">
+              <ng-container *ngIf="row.isMonthRow; else dayRow">
+                <td colspan="11" class="month-row">{{ row.monthYear }}</td>
+              </ng-container>
+              <ng-template #dayRow>
+                <ng-container *ngIf="!row.isMonthRow">
+                  <td *ngFor="let day of row.days" [ngClass]="{
+                    'sunday': day.isSunday,
+                    'holiday': day.holiday,
+                    'exam': day.exam,
+                    'event': day.event,
+                    'milestone': day.milestone,
+                    'start-day': day.isStartDay,
+                    'end-day': day.isEndDay,
+                    'division-start': day.isDivisionStart
+                  }">
+                    <div class="date">{{ day.dayName }} {{ day.date.getDate() }}</div>
+                    <div class="label" *ngIf="day.holiday">{{ day.holiday }}</div>
+                    <div class="label" *ngIf="day.exam">{{ day.exam }}</div>
+                    <div class="label" *ngIf="day.event">{{ day.event }}</div>
+                    <div class="label" *ngIf="day.milestone">{{ day.milestone }}</div>
+                  </td>
+                  <td *ngFor="let i of [].constructor(11 - row.days.length)" class="empty"></td>
+                </ng-container>
+              </ng-template>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Load Confirmation Modal -->
+  <div class="modal fade" id="confirmLoadModal" tabindex="-1" aria-labelledby="confirmLoadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmLoadModalLabel">Load Existing Calendar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showConfirmModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmLoad(false)">No</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="confirmLoad(true)">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showDeleteConfirmModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmDelete(false)">No</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmDelete(true)">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-admin-footer></app-admin-footer>

@@ -18,6 +18,9 @@ import { ProfilesListComponent } from './profiles-list/profiles-list.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { ProfileDetailsComponent } from './profile-details/profile-details.component';
 import { CentralAdminGuard } from '../CentralAdminGuard';
+import { CalendarComponent } from './calendar/calendar.component';
+import { ViewCalendarComponent } from './view-calendar/view-calendar.component'; 
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -26,6 +29,8 @@ const routes: Routes = [
   { path: 'users/edit/:id', component: EditUserComponent },
   { path: 'users/details/:id', component: UserDetailsComponent },
   { path: 'timetables', component: TimetablesComponent },
+  { path: 'calendar', component: CalendarComponent }, 
+  { path: 'view-calendar', component: ViewCalendarComponent }, 
   { path: 'profiles', component: ProfilesComponent, canActivate: [CentralAdminGuard] },
   { path: 'profiles-list', component: ProfilesListComponent, canActivate: [CentralAdminGuard] },
   { path: 'profiles/edit/:id', component: ProfileEditComponent, canActivate: [CentralAdminGuard] },
@@ -47,14 +52,17 @@ const routes: Routes = [
     ProfilesComponent,
     ProfilesListComponent,
     ProfileEditComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    CalendarComponent,
+    ViewCalendarComponent 
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    MatTableModule
-  ],
+    MatTableModule,
+    FullCalendarModule
+  ]
 })
 export class AdminModule {}

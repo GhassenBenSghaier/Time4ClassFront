@@ -1,0 +1,56 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">School Calendar</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">View Calendar</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center" *ngIf="currentCalendar">
+            School Calendar: {{ currentCalendar.schoolYear }}
+          </h5>
+          <div *ngIf="!currentCalendar" class="text-center">
+            <p>Loading calendar...</p>
+          </div>
+          <table class="calendar-table" *ngIf="currentCalendar">
+            <tr *ngFor="let row of calendarRows">
+              <ng-container *ngIf="row.isMonthRow; else dayRow">
+                <td colspan="11" class="month-row">{{ row.monthYear }}</td>
+              </ng-container>
+              <ng-template #dayRow>
+                <ng-container *ngIf="!row.isMonthRow">
+                  <td *ngFor="let day of row.days" [ngClass]="{
+                    'sunday': day.isSunday,
+                    'holiday': day.holiday,
+                    'exam': day.exam,
+                    'event': day.event,
+                    'milestone': day.milestone,
+                    'start-day': day.isStartDay,
+                    'end-day': day.isEndDay,
+                    'division-start': day.isDivisionStart
+                  }">
+                    <div class="date">{{ day.dayName }} {{ day.date.getDate() }}</div>
+                    <div class="label" *ngIf="day.holiday">{{ day.holiday }}</div>
+                    <div class="label" *ngIf="day.exam">{{ day.exam }}</div>
+                    <div class="label" *ngIf="day.event">{{ day.event }}</div>
+                    <div class="label" *ngIf="day.milestone">{{ day.milestone }}</div>
+                  </td>
+                  <td *ngFor="let i of [].constructor(11 - row.days.length)" class="empty"></td>
+                </ng-container>
+              </ng-template>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>
