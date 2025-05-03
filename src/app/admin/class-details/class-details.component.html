@@ -1,0 +1,65 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Class Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/classes-list">Classes</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Class Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="classEntity" class="details-container">
+            <!-- <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">ID:</div>
+              <div class="col-sm-8">{{ classEntity.id }}</div>
+            </div> -->
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Name:</div>
+              <div class="col-sm-8">{{ classEntity.name }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">School:</div>
+              <div class="col-sm-8">{{ school ? school.name : 'Loading...' }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Program:</div>
+              <div class="col-sm-8">{{ program ? program.name : 'Loading...' }}</div>
+            </div>
+            <!-- <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Student Count:</div>
+              <div class="col-sm-8">{{ classEntity.studentCount }}</div>
+            </div> -->
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Student Count:</div>
+              <div class="col-sm-8">{{ students.length }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Students:</div>
+              <div class="col-sm-8">
+                <ul *ngIf="students.length > 0; else noStudents">
+                  <li *ngFor="let student of students">{{ student.firstName }} {{ student.lastName }}</li>
+                </ul>
+                <ng-template #noStudents>
+                  <p>No students assigned to this class.</p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Classes"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

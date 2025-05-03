@@ -1,0 +1,149 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Timetables Programs</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Timetables Programs</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="framed-content shadow-sm">
+          <div class="card-title-container">
+            <h5 class="card-title fw-semibold">All Programs <span class="text-muted">| Total: {{ filteredPrograms.length }}</span></h5>
+            <div class="action-icons">
+              <i class="fas fa-search btn-icon btn-search me-2" (click)="toggleSearch()" title="Toggle Search"></i>
+              <i class="fas fa-plus-circle btn-icon btn-add" routerLink="/admin/programs/add" title="Add New Program"></i>
+            </div>
+          </div>
+          <!-- Search Form -->
+          <form [formGroup]="searchForm" class="mb-4" *ngIf="showSearch">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <input type="text" formControlName="name" class="form-control" placeholder="Search by Program Name">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="number" formControlName="numSubjects" class="form-control" placeholder="Search by Number of Subjects">
+              </div>
+            </div>
+          </form>
+          <!-- Programs Table -->
+          <table class="table table-hover">
+            <thead class="bg-light">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Number of Subjects</th>
+                <th>Status</th>
+                <th class="actions-column">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let program of getPaginatedPrograms(); let i = index">
+                <th>{{ (currentPage - 1) * pageSize + i + 1 }}</th>
+                <td>{{ program.name }}</td>
+                <td>{{ program.programSubjects.length }}</td>
+                <td>{{ program.status || 'Active' }}</td>
+                <td class="actions-column">
+                  <i class="fas fa-info-circle btn-icon btn-details me-2" (click)="viewDetails(program)" title="View Details"></i>
+                  <i class="fas fa-edit btn-icon btn-edit me-2" (click)="editProgram(program)" title="Edit Program"></i>
+                  <i class="fas fa-trash-alt btn-icon btn-delete" (click)="deleteProgram(program)" title="Delete Program"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Area -->
+        <div class="pagination-area" *ngIf="totalPages > 1">
+          <button class="btn btn-pagination" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-pagination" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edit Confirmation Modal -->
+  <div class="modal fade" id="editConfirmModal" tabindex="-1" aria-labelledby="editConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editConfirmModalLabel">Confirm Edit</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by editProgram -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmEdit(false)">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="confirmEdit(true)">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by deleteProgram -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmDelete(false)">Cancel</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmDelete(true)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showSuccessModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showErrorModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-admin-footer></app-admin-footer>

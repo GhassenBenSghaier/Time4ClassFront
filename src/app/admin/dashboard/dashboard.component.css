@@ -4,6 +4,11 @@
   background: #f1f3f5;
   min-height: 100vh;
 }
+
+.section {
+  padding: 0 0px;
+}
+
 .pagetitle h1 {
   font-size: 1.75rem;
   color: #1a1d29;

@@ -1,0 +1,149 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">{{ isUpdateMode ? 'Update Program' : 'Create Program' }}</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/programs">Timetables Programs</a></li>
+        <li class="breadcrumb-item active">{{ isUpdateMode ? 'Update Program' : 'Create Program' }}</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">{{ isUpdateMode ? 'Update Program' : 'Create New Program' }}</h5>
+          <form [formGroup]="programForm" (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+            <div class="w-100">
+              <!-- Common Fields -->
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="levelId" class="col-form-label">
+                    Level <span class="required-asterisk">*</span>
+                  </label>
+                  <select formControlName="levelId" id="levelId" class="form-select">
+                    <option value="" disabled selected>Select Level</option>
+                    <option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</option>
+                  </select>
+                  <div *ngIf="programForm.get('levelId')?.touched && programForm.get('levelId')?.invalid" class="error">
+                    Level is required.
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="specialtyId" class="col-form-label">Specialty</label>
+                  <select formControlName="specialtyId" id="specialtyId" class="form-select" [disabled]="!programForm.get('levelId')?.value || programForm.get('levelId')?.value == '1'">
+                    <option value="" disabled selected>Select Specialty</option>
+                    <option *ngFor="let specialty of specialties" [value]="specialty.id">{{ specialty.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <div class="col-12">
+                  <label for="name" class="col-form-label">
+                    Program Name <span class="required-asterisk">*</span>
+                  </label>
+                  <input formControlName="name" id="name" class="form-control" readonly>
+                  <div *ngIf="programForm.get('name')?.touched && programForm.get('name')?.invalid" class="error">
+                    Program name is required and must be at least 3 characters.
+                  </div>
+                </div>
+              </div>
+              <!-- Subjects Section -->
+              <div class="subjects-section">
+                <h5 class="fw-semibold">Assign Subjects</h5>
+                <div formArrayName="programSubjects">
+                  <div *ngFor="let subject of subjectsArray.controls; let i=index" [formGroupName]="i" class="mb-3 subject-entry">
+                    <div class="row">
+                      <div class="col-4">
+                        <label class="col-form-label">
+                          Subject <span class="required-asterisk">*</span>
+                        </label>
+                        <select formControlName="subjectId" class="form-select">
+                          <option value="" disabled selected>Select Subject</option>
+                          <option *ngFor="let subj of subjects" [value]="subj.id">{{ subj.name }}</option>
+                        </select>
+                        <div *ngIf="subject.get('subjectId')?.touched && subject.get('subjectId')?.invalid" class="error">
+                          Subject is required.
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <label class="col-form-label">
+                          Hours per Week <span class="required-asterisk">*</span>
+                        </label>
+                        <input type="number" formControlName="hoursPerWeek" class="form-control" min="1">
+                        <div *ngIf="subject.get('hoursPerWeek')?.touched && subject.get('hoursPerWeek')?.invalid" class="error">
+                          Hours must be at least 1.
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <label class="col-form-label">Core Subject</label>
+                        <div class="form-check mt-2">
+                          <input type="checkbox" formControlName="isCore" class="form-check-input">
+                        </div>
+                      </div>
+                      <div class="col-2 d-flex align-items-end">
+                        <i class="fas fa-trash-alt btn-icon btn-remove-subj" (click)="removeSubject(i)" title="Remove Subject"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 text-left">
+                  <button type="button" class="btn btn-primary btn-icon-text" (click)="addSubject()" title="Add Subject">
+                    <i class="fas fa-plus plus-icon"></i> Add Subject
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <i class="fas fa-save btn-icon btn-save me-2" (click)="onSubmit()" title="{{ isUpdateMode ? 'Update Program' : 'Create Program' }}"></i>
+              <i class="fas fa-times btn-icon btn-cancel" routerLink="/admin/programs" title="Cancel"></i>
+            </div>
+            <div class="text-center mt-2">
+              <small class="text-muted">* Required fields: Level, Program Name, Subject, Hours per Week</small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showSuccessModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showErrorModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-admin-footer></app-admin-footer>

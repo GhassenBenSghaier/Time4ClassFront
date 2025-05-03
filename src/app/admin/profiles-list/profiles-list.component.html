@@ -47,7 +47,7 @@
                 <th>Code</th>
                 <th>Designation</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th class="actions-column">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -56,7 +56,7 @@
                 <td>{{ profile.code }}</td>
                 <td>{{ profile.designation }}</td>
                 <td>{{ profile.status }}</td>
-                <td>
+                <td class="actions-column">
                   <i class="fas fa-info-circle btn-icon btn-details me-2" (click)="viewDetails(profile)" title="View Details"></i>
                   <i class="fas fa-edit btn-icon btn-edit me-2" (click)="editProfile(profile)" title="Edit Profile"></i>
                   <i class="fas fa-trash-alt btn-icon btn-delete" (click)="deleteProfile(profile)" title="Delete Profile"></i>

@@ -66,7 +66,7 @@
               <!-- Holidays -->
               <div formArrayName="holidays" class="mb-3">
                 <h3>Holidays</h3>
-                <button type="button" (click)="addHoliday()" class="btn btn-primary mb-2">Add Holiday</button>
+                <button type="button" (click)="addHoliday()" class="btn btn-primary mb-2"><span class="plus-icon">+</span> Add Holiday</button>
                 <div *ngFor="let holiday of holidays.controls; let i=index" [formGroupName]="i" class="item-group">
                   <div class="row">
                     <div class="col-4">
@@ -91,7 +91,7 @@
               <!-- Exam Periods -->
               <div formArrayName="examPeriods" class="mb-3">
                 <h3>Exam Periods</h3>
-                <button type="button" (click)="addExamPeriod()" class="btn btn-primary mb-2">Add Exam Period</button>
+                <button type="button" (click)="addExamPeriod()" class="btn btn-primary mb-2"><span class="plus-icon">+</span> Add Exam Period</button>
                 <div *ngFor="let exam of examPeriods.controls; let i=index" [formGroupName]="i" class="item-group">
                   <div class="row">
                     <div class="col-4">
@@ -116,9 +116,7 @@
               <!-- Events -->
               <div formArrayName="events" class="mb-3">
                 <h3>Events</h3>
-                <button type="button" (click)="addEvent()" class="btn btn-primary mb-2">
-                  <span class="plus-icon"></span> Add Event
-                </button>
+                <button type="button" (click)="addEvent()" class="btn btn-primary mb-2"><span class="plus-icon">+</span> Add Event</button>
                 <div *ngFor="let event of events.controls; let i=index" [formGroupName]="i" class="item-group">
                   <div class="row">
                     <div class="col-4">
@@ -149,7 +147,7 @@
               <!-- Milestones -->
               <div formArrayName="milestones" class="mb-3">
                 <h3>Milestones</h3>
-                <button type="button" (click)="addMilestone()" class="btn btn-primary mb-2">Add Milestone</button>
+                <button type="button" (click)="addMilestone()" class="btn btn-primary mb-2"><span class="plus-icon">+</span> Add Milestone</button>
                 <div *ngFor="let milestone of milestones.controls; let i=index" [formGroupName]="i" class="item-group">
                   <div class="row">
                     <div class="col-4">
@@ -202,10 +200,18 @@
         <!-- Calendar Display -->
         <div *ngIf="generatedCalendar" class="framed-content shadow-sm mt-4">
           <h5 class="card-title fw-semibold text-center">School Calendar: {{ generatedCalendar.schoolYear }}</h5>
+          <div class="calendar-controls mb-3">
+            <button class="btn btn-primary me-2" (click)="setDisplayMode('year')" [ngClass]="{'active': displayMode === 'year'}">Year View</button>
+            <button class="btn btn-primary me-2" (click)="setDisplayMode('month')" [ngClass]="{'active': displayMode === 'month'}">Month View</button>
+            <span *ngIf="displayMode === 'month'" class="month-nav">
+              <button class="btn btn-secondary me-2" (click)="previousMonth()">&lt; Previous</button>
+              <button class="btn btn-secondary" (click)="nextMonth()">Next &gt;</button>
+            </span>
+          </div>
           <table class="calendar-table">
             <tr *ngFor="let row of calendarRows">
               <ng-container *ngIf="row.isMonthRow; else dayRow">
-                <td colspan="11" class="month-row">{{ row.monthYear }}</td>
+                <td [attr.colspan]="displayMode === 'year' ? 11 : 7" class="month-row">{{ row.monthYear }}</td>
               </ng-container>
               <ng-template #dayRow>
                 <ng-container *ngIf="!row.isMonthRow">
@@ -225,7 +231,7 @@
                     <div class="label" *ngIf="day.event">{{ day.event }}</div>
                     <div class="label" *ngIf="day.milestone">{{ day.milestone }}</div>
                   </td>
-                  <td *ngFor="let i of [].constructor(11 - row.days.length)" class="empty"></td>
+                  <td *ngFor="let i of [].constructor((displayMode === 'year' ? 11 : 7) - row.days.length)" class="empty"></td>
                 </ng-container>
               </ng-template>
             </tr>

@@ -1,0 +1,42 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Specialty Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/specialties-list">Specialties</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Specialty Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="specialty" class="details-container">
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">ID:</div>
+              <div class="col-sm-8">{{ specialty.id }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Name:</div>
+              <div class="col-sm-8">{{ specialty.name }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Level:</div>
+              <div class="col-sm-8">{{ level ? level.name : 'Loading...' }}</div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Specialties"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

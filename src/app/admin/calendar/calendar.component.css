@@ -5,6 +5,10 @@
   min-height: 100vh;
 }
 
+.section {
+  padding: 0 0px;
+}
+
 .framed-content {
   border: 2px solid #ced4da;
   border-radius: 16px;
@@ -24,8 +28,8 @@
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  border-color: #2c3340;
+  box-shadow: 0 0 5px rgba(44, 51, 64, 0.3);
 }
 
 .form-control[readonly] {
@@ -97,11 +101,18 @@ h3 {
 
 .calendar-table td {
   border: 1px solid #ddd;
-  width: 9.09%; /* 100% / 11 columns */
-  height: 80px; /* Increased height for larger cells */
+  height: 80px;
   text-align: center;
   vertical-align: top;
-  font-size: 14px; /* Larger font size for clarity */
+  font-size: 14px;
+}
+
+.calendar-table td:not(.empty) {
+  width: calc(100% / 11); /* Default for year view */
+}
+
+.calendar-table.month-view td:not(.empty) {
+  width: calc(100% / 7); /* Adjust for month view */
 }
 
 .calendar-table .month-row {
@@ -117,7 +128,7 @@ h3 {
 }
 
 .calendar-table .label {
-  font-size: 12px; /* Slightly larger for readability */
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -162,7 +173,7 @@ h3 {
 }
 
 .division-start {
-  background-color: #d4edda; /* Light green for division start */
+  background-color: #d4edda;
   font-weight: bold;
 }
 
@@ -180,6 +191,34 @@ h3 {
   border-top: 1px solid #dee2e6;
 }
 
+/* Calendar controls */
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.month-nav {
+  display: inline-flex;
+  align-items: center;
+}
+
+.calendar-controls .btn {
+  background-color: #2c3340;
+  border-color: #2c3340;
+  color: #ffffff;
+}
+
+.calendar-controls .btn:hover {
+  background-color: #1a1d29;
+  border-color: #1a1d29;
+}
+
+.calendar-controls .btn.active {
+  background-color: #1a1d29;
+  border-color: #1a1d29;
+}
+
 /* Responsive adjustments */
 @media (max-width: 991px) {
   #main {
@@ -189,8 +228,14 @@ h3 {
     width: 100%;
     margin-bottom: 15px;
   }
+  .calendar-table td {
+    font-size: 12px;
+    height: 60px;
+  }
+  .calendar-table .label {
+    font-size: 10px;
+  }
 }
-
 
 .button-container {
   display: flex;
@@ -211,4 +256,16 @@ h3 {
 .dropdown-item:hover {
   background-color: #f8f9fa;
   cursor: pointer;
+}
+
+/* Add buttons */
+.btn-primary {
+  background-color: #2c3340;
+  border-color: #2c3340;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #1a1d29;
+  border-color: #1a1d29;
 }

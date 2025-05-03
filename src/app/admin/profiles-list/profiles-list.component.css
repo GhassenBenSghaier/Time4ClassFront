@@ -1,8 +1,13 @@
 #main {
+  
   margin-left: 260px;
   padding: 90px 30px 30px;
   background: #f1f3f5;
   min-height: 100vh;
+}
+
+.section {
+  padding: 0 0px;
 }
 
 .framed-content {
@@ -177,4 +182,24 @@
     margin-top: 10px;
     align-self: flex-end;
   }
+}
+
+
+.table .actions-column {
+  text-align: right; /* Align content to the right */
+  padding-right: 10px; /* Reduce right padding to bring icons closer to edge */
+}
+
+/* Ensure table cells don't add extra padding */
+.table td.actions-column {
+  vertical-align: middle; /* Center icons vertically */
+}
+
+/* Optional: Adjust icon spacing for better alignment */
+.actions-column .btn-icon {
+  margin-left: 8px; /* Consistent spacing between icons */
+}
+
+.actions-column .btn-icon:last-child {
+  margin-right: 0; /* Remove extra margin on the last icon */
 }

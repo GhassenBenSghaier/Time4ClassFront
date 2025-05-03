@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CalendarService } from '../../calendar.service';
@@ -40,8 +41,10 @@ export class CalendarComponent implements OnInit {
   calendarRows: CalendarRow[] = [];
   selectedSchoolYear: string | null = null;
   previousSchoolYear: string | null = null;
-  availableSchoolYears: string[] = []; // List of existing school years from DB
-  schoolYearToDelete: string | null = null; // Selected school year for deletion
+  availableSchoolYears: string[] = [];
+  schoolYearToDelete: string | null = null;
+  displayMode: 'year' | 'month' = 'year'; // Track display mode
+  currentMonth: Date = new Date(); // Track current month for month view
 
   constructor(private fb: FormBuilder, private calendarService: CalendarService) {
     this.calendarForm = this.fb.group({
@@ -68,7 +71,7 @@ export class CalendarComponent implements OnInit {
         this.checkSchoolYear(schoolYear);
       }
     });
-    this.loadAvailableSchoolYears(); // Load school years on init
+    this.loadAvailableSchoolYears();
   }
 
   get holidays() { return this.calendarForm.get('holidays') as FormArray; }
@@ -243,7 +246,7 @@ export class CalendarComponent implements OnInit {
           this.generatedCalendar = result;
           console.log('Generated calendar:', this.generatedCalendar);
           this.generateCalendarRows(result);
-          this.loadAvailableSchoolYears(); // Refresh school years after saving
+          this.loadAvailableSchoolYears();
           alert('Calendar saved successfully!');
         },
         error: (err) => {
@@ -260,21 +263,76 @@ export class CalendarComponent implements OnInit {
     const start = new Date(calendar.startDate);
     const rows: CalendarRow[] = [];
 
-    const startMonth = new Date(start.getFullYear(), start.getMonth(), 1);
-    const endMonth = new Date(start.getFullYear(), start.getMonth() + 12, 0);
+    if (this.displayMode === 'year') {
+      const startMonth = new Date(start.getFullYear(), start.getMonth(), 1);
+      const endMonth = new Date(start.getFullYear(), start.getMonth() + 12, 0);
 
-    let currentDate = new Date(startMonth);
-    let currentMonth = -1;
+      let currentDate = new Date(startMonth);
+      let currentMonth = -1;
 
-    while (currentDate <= endMonth) {
-      const monthYear = currentDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-      if (currentDate.getMonth() !== currentMonth) {
-        rows.push({ isMonthRow: true, monthYear });
-        currentMonth = currentDate.getMonth();
+      while (currentDate <= endMonth) {
+        const monthYear = currentDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        if (currentDate.getMonth() !== currentMonth) {
+          rows.push({ isMonthRow: true, monthYear });
+          currentMonth = currentDate.getMonth();
+        }
+
+        const allDays: EnrichedDate[] = [];
+        const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        while (currentDate <= monthEnd) {
+          const enriched = this.enrichDate(new Date(currentDate), calendar);
+          const currentDateStr = currentDate.toDateString();
+
+          if (currentDateStr === start.toDateString()) {
+            enriched.isStartDay = true;
+            enriched.event = enriched.event || 'School Year Start';
+          }
+          const end = new Date(calendar.endDate);
+          if (currentDateStr === end.toDateString()) {
+            enriched.isEndDay = true;
+            enriched.event = enriched.event || 'School Year End';
+          }
+
+          if (calendar.divisions) {
+            calendar.divisions.forEach((div, index) => {
+              const divStartDate = new Date(div.startDate).toDateString();
+              const divisionLabel = calendar.divisionType === 'semesters' ? 'Semester' : 'Trimester';
+
+              if (currentDateStr === divStartDate) {
+                enriched.isDivisionStart = true;
+                enriched.event = enriched.event || `${divisionLabel} ${index + 1} Start`;
+              }
+            });
+          }
+
+          allDays.push(enriched);
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        if (allDays.length > 0) {
+          const firstRowDays = allDays.slice(0, 11);
+          const secondRowDays = allDays.slice(11, 22);
+          const thirdRowDays = allDays.slice(22);
+          rows.push({ isMonthRow: false, days: firstRowDays });
+          if (secondRowDays.length > 0) {
+            rows.push({ isMonthRow: false, days: secondRowDays });
+          }
+          if (thirdRowDays.length > 0) {
+            rows.push({ isMonthRow: false, days: thirdRowDays });
+          }
+        }
       }
+    } else {
+      // Month-based view
+      const monthStart = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1);
+      const monthEnd = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0);
+      const monthYear = this.currentMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
+      rows.push({ isMonthRow: true, monthYear });
+
+      let currentDate = new Date(monthStart);
       const allDays: EnrichedDate[] = [];
-      const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
       while (currentDate <= monthEnd) {
         const enriched = this.enrichDate(new Date(currentDate), calendar);
@@ -306,18 +364,20 @@ export class CalendarComponent implements OnInit {
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
-      if (allDays.length > 0) {
-        const firstRowDays = allDays.slice(0, 11);
-        const secondRowDays = allDays.slice(11, 22);
-        const thirdRowDays = allDays.slice(22);
-        rows.push({ isMonthRow: false, days: firstRowDays });
-        if (secondRowDays.length > 0) {
-          rows.push({ isMonthRow: false, days: secondRowDays });
+      // Split days into weeks
+      const weeks: EnrichedDate[][] = [];
+      let week: EnrichedDate[] = [];
+      allDays.forEach((day, index) => {
+        week.push(day);
+        if (week.length === 7 || index === allDays.length - 1) {
+          weeks.push(week);
+          week = [];
         }
-        if (thirdRowDays.length > 0) {
-          rows.push({ isMonthRow: false, days: thirdRowDays });
-        }
-      }
+      });
+
+      weeks.forEach(week => {
+        rows.push({ isMonthRow: false, days: week });
+      });
     }
 
     this.calendarRows = rows;
@@ -344,7 +404,6 @@ export class CalendarComponent implements OnInit {
     };
   }
 
-  // Load available school years from the database
   loadAvailableSchoolYears() {
     this.calendarService.getAllSchoolYears().subscribe({
       next: (years) => {
@@ -353,13 +412,12 @@ export class CalendarComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching school years:', err);
-        this.availableSchoolYears = []; // Fallback to empty array on error
+        this.availableSchoolYears = [];
         alert('Failed to load school years from the database.');
       }
     });
   }
 
-  // Show delete confirmation modal
   showDeleteConfirmModal(schoolYear: string) {
     this.schoolYearToDelete = schoolYear;
     const modalElement = document.getElementById('confirmDeleteModal');
@@ -373,7 +431,6 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  // Handle deletion confirmation
   confirmDelete(confirmed: boolean) {
     if (confirmed && this.schoolYearToDelete) {
       this.calendarService.deleteCalendar(this.schoolYearToDelete).subscribe({
@@ -385,7 +442,7 @@ export class CalendarComponent implements OnInit {
           }
           this.schoolYearToDelete = null;
           alert('Calendar deleted successfully!');
-          this.loadAvailableSchoolYears(); // Refresh the list after deletion
+          this.loadAvailableSchoolYears();
         },
         error: (err) => {
           console.error('Error deleting calendar:', err);
@@ -394,6 +451,31 @@ export class CalendarComponent implements OnInit {
       });
     } else {
       this.schoolYearToDelete = null;
+    }
+  }
+
+  // Methods to handle display mode switching and month navigation
+  setDisplayMode(mode: 'year' | 'month') {
+    this.displayMode = mode;
+    if (mode === 'month' && this.generatedCalendar) {
+      this.currentMonth = new Date(this.generatedCalendar.startDate);
+    }
+    if (this.generatedCalendar) {
+      this.generateCalendarRows(this.generatedCalendar);
+    }
+  }
+
+  previousMonth() {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
+    if (this.generatedCalendar) {
+      this.generateCalendarRows(this.generatedCalendar);
+    }
+  }
+
+  nextMonth() {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
+    if (this.generatedCalendar) {
+      this.generateCalendarRows(this.generatedCalendar);
     }
   }
 }

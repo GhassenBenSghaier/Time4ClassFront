@@ -1,0 +1,483 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<div class="main" id="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Timetable Management</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Timetable Management</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Manage Timetables</h5>
+          <!-- Tabs -->
+          <div class="mb-4 flex tab-group">
+            <button
+              (click)="setActiveTab('capacity')"
+              [class.bg-sidebar]="activeTab === 'capacity'"
+              [class.text-white]="activeTab === 'capacity'"
+              class="tab-button rounded-l-md"
+              [class.border-r-0]="activeTab === 'capacity'"
+            >
+              Check Capacity
+            </button>
+            <button
+              (click)="setActiveTab('generate')"
+              [class.bg-sidebar]="activeTab === 'generate'"
+              [class.text-white]="activeTab === 'generate'"
+              class="tab-button"
+              [class.border-x-0]="activeTab === 'generate'"
+            >
+              Generate Timetables
+            </button>
+            <button
+              (click)="setActiveTab('view')"
+              [class.bg-sidebar]="activeTab === 'view'"
+              [class.text-white]="activeTab === 'view'"
+              class="tab-button rounded-r-md"
+              [class.border-l-0]="activeTab === 'view'"
+            >
+              View Timetables
+            </button>
+          </div>
+
+          <!-- Infeasible Tab Switch Modal -->
+          <div *ngIf="showInfeasibleTabSwitchModal" class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <p>Your current class configuration is infeasible due to limited resources.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" (click)="closeInfeasibleTabSwitchModal()">Stay in Check Capacity</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capacity Check Section -->
+          <div *ngIf="activeTab === 'capacity'" class="space-y-6">
+            <div class="flex items-center gap-2">
+              <h2 class="text-2xl fw-semibold">Check Capacity for your school :</h2>
+              <ng-container *ngIf="isLocalAdmin && adminSchool; else schoolDropdownCapacity">
+                <span class="text-2xl fw-semibold">{{ adminSchool.name }}</span>
+              </ng-container>
+              <ng-template #schoolDropdownCapacity>
+                <select
+                  id="capacitySchoolId"
+                  [(ngModel)]="capacityRequest.schoolId"
+                  name="capacitySchoolId"
+                  (change)="onSchoolChange('capacity')"
+                  required
+                  class="form-select school-title-select"
+                >
+                  <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
+                </select>
+              </ng-template>
+            </div>
+            <form (ngSubmit)="checkCapacity()" class="space-y-4 w-100">
+              <div>
+                <label class="col-form-label">
+                  Classes Needed (Program: Number of Classes) <span class="required-asterisk">*</span>
+                </label>
+                <div class="space-y-2">
+                  <div *ngFor="let entry of capacityProgramEntries; let i = index" class="flex items-center gap-2">
+                    <select
+                      [(ngModel)]="entry.program"
+                      [name]="'capacityProgram' + i"
+                      required
+                      class="form-select input-program"
+                    >
+                      <option [ngValue]="null" disabled>Select Program</option>
+                      <option *ngFor="let program of programs" [ngValue]="program">{{ program.name }}</option>
+                    </select>
+                    <input
+                      type="number"
+                      [(ngModel)]="entry.count"
+                      [name]="'capacityCount' + i"
+                      placeholder="Number of Classes"
+                      required
+                      min="0"
+                      class="form-control input-count"
+                    />
+                    <i
+                      class="fas fa-times btn-icon btn-cancel"
+                      (click)="removeCapacityProgram(i)"
+                      title="Remove"
+                    ></i>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="addCapacityProgram()"
+                    class="btn btn-primary btn-icon-text"
+                  >
+                    <span class="plus-icon">+</span> Add Another Program
+                  </button>
+                </div>
+              </div>
+              <div class="text-center">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-action"
+                  title="Check Capacity"
+                >
+                  <i class="fas fa-check"></i> Check Capacity
+                </button>
+              </div>
+            </form>
+
+            <div *ngIf="capacityResponse" class="mt-6">
+              <h3 class="text-xl fw-semibold">Capacity Check Results</h3>
+              <div class="flex items-center space-x-2 mb-4">
+                <span *ngIf="capacityResponse.feasible" class="text-green-500 text-2xl">✔</span>
+                <span *ngIf="!capacityResponse.feasible" class="text-red-500 text-2xl">✘</span>
+                <p class="text-lg">
+                  {{ capacityResponse.feasible ? 'Your classes can fit at ' + getSchoolName(capacityResponse.schoolId) + '!' : 'Your classes cannot fit due to limited resources. Check details below.' }}
+                </p>
+              </div>
+              <p class="text-sm italic">{{ capacityResponse.message }}</p>
+
+              <div class="mt-4">
+                <h4 class="text-lg fw-medium">Classes Requested</h4>
+                <table class="table table-bordered mt-2">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="p-2 text-left">Program</th>
+                      <th class="p-2 text-left">Classes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of requestedClassesEntries">
+                      <td class="p-2">{{ entry.program }}</td>
+                      <td class="p-2">{{ entry.count }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="text-lg fw-medium">Teaching Hours</h4>
+                <table class="table table-bordered mt-2">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="p-2 text-left">Subject</th>
+                      <th class="p-2 text-left">Hours Needed</th>
+                      <th class="p-2 text-left">Hours Available</th>
+                      <th class="p-2 text-left">Enough Teachers?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of teacherConstraintsEntries">
+                      <td class="p-2">{{ entry.subject }}</td>
+                      <td class="p-2">{{ entry.needed }}</td>
+                      <td class="p-2">{{ entry.available }}</td>
+                      <td class="p-2">
+                        <span *ngIf="entry.enough" class="text-green-500">Yes</span>
+                        <span *ngIf="!entry.enough" class="text-red-500">No</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="text-lg fw-medium">Room Hours</h4>
+                <table class="table table-bordered mt-2">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="p-2 text-left">Room Type</th>
+                      <th class="p-2 text-left">Hours Needed</th>
+                      <th class="p-2 text-left">Hours Available</th>
+                      <th class="p-2 text-left">Enough Rooms?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of roomConstraintsEntries">
+                      <td class="p-2">{{ entry.roomType | titlecase }}</td>
+                      <td class="p-2">{{ entry.needed }}</td>
+                      <td class="p-2">{{ entry.available }}</td>
+                      <td class="p-2">
+                        <span *ngIf="entry.enough" class="text-green-500">Yes</span>
+                        <span *ngIf="!entry.enough" class="text-red-500">No</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="text-lg fw-medium">Total Lesson Hours</h4>
+                <p>
+                  <strong>Hours Needed:</strong> {{ capacityResponse.slotConstraint.required }}<br>
+                  <strong>Hours Available:</strong> {{ capacityResponse.slotConstraint.available }}<br>
+                  <strong>Enough Time?</strong>
+                  <span *ngIf="capacityResponse.slotConstraint.satisfied" class="text-green-500">Yes</span>
+                  <span *ngIf="!capacityResponse.slotConstraint.satisfied" class="text-red-500">No</span>
+                </p>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="text-lg fw-medium">Total Classes</h4>
+                <p>
+                  <strong>Classes Needed:</strong> {{ capacityResponse.classCountConstraint.required }}<br>
+                  <strong>Classes Possible:</strong> {{ capacityResponse.classCountConstraint.available }}<br>
+                  <strong>Enough Space?</strong>
+                  <span *ngIf="capacityResponse.classCountConstraint.satisfied" class="text-green-500">Yes</span>
+                  <span *ngIf="!capacityResponse.classCountConstraint.satisfied" class="text-red-500">No</span>
+                </p>
+              </div>
+            </div>
+            <div *ngIf="capacityError" class="mt-4 text-red-500">
+              Something went wrong: {{ capacityError }}
+            </div>
+          </div>
+
+          <!-- Timetable Generation Section -->
+          <div *ngIf="activeTab === 'generate'" class="space-y-6">
+            <div class="flex items-center gap-2">
+              <h2 class="text-2xl fw-semibold">Generate Timetables for your school :</h2>
+              <ng-container *ngIf="isLocalAdmin && adminSchool; else schoolDropdownGenerate">
+                <span class="text-2xl fw-semibold">{{ adminSchool.name }}</span>
+              </ng-container>
+              <ng-template #schoolDropdownGenerate>
+                <select
+                  id="generateSchoolId"
+                  [(ngModel)]="generateRequest.schoolId"
+                  name="generateSchoolId"
+                  (change)="onSchoolChange('generate')"
+                  required
+                  class="form-select school-title-select"
+                >
+                  <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
+                </select>
+              </ng-template>
+            </div>
+            <form (ngSubmit)="generateTimetable()" class="space-y-4 w-100">
+              <div>
+                <label class="col-form-label">
+                  Program Class Counts (Program: Count) <span class="required-asterisk">*</span>
+                </label>
+                <div class="space-y-2">
+                  <div *ngFor="let entry of generateProgramEntries; let i = index" class="flex items-center gap-2">
+                    <select
+                      [(ngModel)]="entry.program"
+                      [name]="'generateProgram' + i"
+                      required
+                      class="form-select input-program"
+                    >
+                      <option [ngValue]="null" disabled>Select Program</option>
+                      <option *ngFor="let program of programs" [ngValue]="program">{{ program.name }}</option>
+                    </select>
+                    <input
+                      type="number"
+                      [(ngModel)]="entry.count"
+                      [name]="'generateCount' + i"
+                      placeholder="Count"
+                      required
+                      min="0"
+                      class="form-control input-count"
+                    />
+                    <i
+                      class="fas fa-times btn-icon btn-cancel"
+                      (click)="removeGenerateProgram(i)"
+                      title="Remove"
+                    ></i>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="addGenerateProgram()"
+                    class="btn btn-primary btn-icon-text"
+                  >
+                    <span class="plus-icon">+</span> Add Program
+                  </button>
+                </div>
+              </div>
+              <div class="text-center">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-action"
+                  title="Generate Timetables"
+                >
+                  <i class="fas fa-cog"></i> Generate Timetables
+                </button>
+              </div>
+            </form>
+
+            <!-- Live Generation Log -->
+            <div *ngIf="isGenerating" class="mt-4 alert alert-info d-flex align-items-center">
+              <i class="fas fa-spinner fa-spin me-2"></i>
+              Timetables are being generated...
+            </div>
+
+            <!-- Infeasible Configuration Modal -->
+            <div *ngIf="showInfeasibleModal" class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>The requested class configuration is not feasible due to limited resources.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="setActiveTab('capacity'); closeInfeasibleModal()">Go to Check Capacity</button>
+                    <button type="button" class="btn btn-secondary" (click)="closeInfeasibleModal()">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="timetable" class="mt-6">
+              <h3 class="text-xl fw-semibold">Generated Timetables</h3>
+              <p><strong>School:</strong> {{ getSchoolName(generateRequest.schoolId) }}</p>
+              <p><strong>Generated:</strong> {{ timetable.generatedAt | date:'medium' }}</p>
+              <div *ngFor="let classEntity of getClasses(timetable)" class="mt-6">
+                <h4 class="text-lg fw-medium">{{ classEntity.name }}</h4>
+                <div class="overflow-x-auto">
+                  <table class="table table-bordered mt-2">
+                    <thead>
+                      <tr class="bg-gray-100">
+                        <th class="p-2 w-24">Day</th>
+                        <th *ngFor="let timeslot of morningTimeslots" class="p-2 w-40">{{ timeslot }}</th>
+                        <th class="p-2 separator"></th>
+                        <th *ngFor="let timeslot of afternoonTimeslots" class="p-2 w-40">{{ timeslot }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let day of days; let i = index">
+                        <td class="p-2">{{ day }}</td>
+                        <td *ngFor="let timeslot of morningTimeslots" class="p-2 text-center align-middle min-h-[80px]">
+                          <ng-container *ngIf="i < 5 || timeslot !== '17:00-18:00'; else emptyCell">
+                            <ng-container *ngIf="getScheduleForCell(timetable, classEntity.id, day, timeslot) as schedule; else emptyCell">
+                              <div class="text-sm schedule-cell">
+                                <span class="highlight-subject">{{ schedule.subject.name }}</span>
+                                <span>{{ schedule.teacher.name }}</span>
+                                <span class="classroom-parentheses">({{ schedule.classroom.name }})</span>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-template #emptyCell>-</ng-template>
+                        </td>
+                        <td class="p-2 separator"></td>
+                        <td *ngFor="let timeslot of afternoonTimeslots" class="p-2 text-center align-middle min-h-[80px]">
+                          <ng-container *ngIf="i < 5 || timeslot !== '17:00-18:00'; else emptyCell">
+                            <ng-container *ngIf="getScheduleForCell(timetable, classEntity.id, day, timeslot) as schedule; else emptyCell">
+                              <div class="text-sm schedule-cell">
+                                <span class="highlight-subject">{{ schedule.subject.name }}</span>
+                                <span>{{ schedule.teacher.name }}</span>
+                                <span class="classroom-parentheses">({{ schedule.classroom.name }})</span>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-template #emptyCell>-</ng-template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="generateError" class="mt-4 text-red-500">
+              {{ generateError }}
+            </div>
+          </div>
+
+          <!-- Timetable Viewing Section -->
+          <div *ngIf="activeTab === 'view'" class="space-y-6">
+            <div class="flex items-center gap-2">
+              <h2 class="text-2xl fw-semibold">View Timetables for your school :</h2>
+              <ng-container *ngIf="isLocalAdmin && adminSchool; else schoolDropdownView">
+                <span class="text-2xl fw-semibold">{{ adminSchool.name }}</span>
+              </ng-container>
+              <ng-template #schoolDropdownView>
+                <select
+                  id="viewSchoolId"
+                  [(ngModel)]="viewSchoolId"
+                  name="viewSchoolId"
+                  (ngModelChange)="onSchoolChange('view')"
+                  required
+                  class="form-select school-title-select"
+                >
+                  <option [ngValue]="null" disabled>Select a school</option>
+                  <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
+                </select>
+              </ng-template>
+            </div>
+            <div *ngIf="viewError" class="mt-4 text-red-500">
+              {{ viewError }}
+            </div>
+            <div *ngIf="!viewError && schools.length === 0" class="mt-4 text-yellow-500">
+              No schools available. Please check the server or try again later.
+            </div>
+            <div class="mb-3 row" *ngIf="schools.length > 0">
+              <div class="col-12 text-center">
+                <button
+                  class="btn btn-primary btn-action"
+                  (click)="loadTimetable()"
+                  title="Load Timetables"
+                  [disabled]="viewSchoolId === null || viewSchoolId === 0"
+                >
+                  <i class="fas fa-search"></i> Load Timetables
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="timetableView && viewSchoolId !== null" class="space-y-8">
+              <h3 class="text-xl fw-semibold">Timetables</h3>
+              <p><strong>School:</strong> {{ getSchoolName(viewSchoolId) }}</p>
+              <p><strong>Generated:</strong> {{ timetableView.generatedAt | date:'medium' }}</p>
+              <div *ngFor="let classEntity of getClasses(timetableView)" class="mt-6">
+                <h4 class="text-lg fw-medium">{{ classEntity.name }}</h4>
+                <div class="overflow-x-auto">
+                  <table class="table table-bordered mt-2">
+                    <thead>
+                      <tr class="bg-gray-100">
+                        <th class="p-2 w-24">Day</th>
+                        <th *ngFor="let timeslot of morningTimeslots" class="p-2 w-40">{{ timeslot }}</th>
+                        <th class="p-2 separator"></th>
+                        <th *ngFor="let timeslot of afternoonTimeslots" class="p-2 w-40">{{ timeslot }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let day of days; let i = index">
+                        <td class="p-2">{{ day }}</td>
+                        <td *ngFor="let timeslot of morningTimeslots" class="p-2 text-center align-middle min-h-[80px]">
+                          <ng-container *ngIf="i < 5 || timeslot !== '17:00-18:00'; else emptyCell">
+                            <ng-container *ngIf="getScheduleForCell(timetableView, classEntity.id, day, timeslot) as schedule; else emptyCell">
+                              <div class="text-sm schedule-cell">
+                                <span class="highlight-subject">{{ schedule.subject.name }}</span>
+                                <span>{{ schedule.teacher.name }}</span>
+                                <span class="classroom-parentheses">({{ schedule.classroom.name }})</span>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-template #emptyCell>-</ng-template>
+                        </td>
+                        <td class="p-2 separator"></td>
+                        <td *ngFor="let timeslot of afternoonTimeslots" class="p-2 text-center align-middle min-h-[80px]">
+                          <ng-container *ngIf="i < 5 || timeslot !== '17:00-18:00'; else emptyCell">
+                            <ng-container *ngIf="getScheduleForCell(timetableView, classEntity.id, day, timeslot) as schedule; else emptyCell">
+                              <div class="text-sm schedule-cell">
+                                <span class="highlight-subject">{{ schedule.subject.name }}</span>
+                                <span>{{ schedule.teacher.name }}</span>
+                                <span class="classroom-parentheses">({{ schedule.classroom.name }})</span>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-template #emptyCell>-</ng-template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<app-admin-footer></app-admin-footer>

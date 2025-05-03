@@ -4,6 +4,11 @@
   background: #f1f3f5;
   min-height: 100vh;
 }
+
+.section {
+  padding: 0 0px;
+}
+
 .framed-content {
   border: 2px solid #ced4da; /* Frame */
   border-radius: 16px; /* Rounder corners (was 12px, now matches previous .card) */
@@ -72,7 +77,7 @@
   color: #c82333;
 }
 .btn-add {
-  color: #2c3340;
+  color: #14171d;
 }
 .btn-add:hover {
   color: #1a1d29;
@@ -142,7 +147,7 @@
 
 
 
-/* Assuming you have existing styles, append these */
+
 .btn-icon {
   cursor: pointer;
   font-size: 1.2rem;
@@ -172,15 +177,15 @@
 
 /* Existing styles (ensure these are present) */
 .btn-details {
-  color: #17a2b8;
+  color: #007bff;
 }
 
 .btn-details:hover {
-  color: #117a8b;
+  color: #0056b3;
 }
 
 .btn-edit {
-  color: #007bff;
+  color: #1a1d29;
 }
 
 .btn-edit:hover {
@@ -196,16 +201,14 @@
 }
 
 .btn-add {
-  color: #28a745;
+  color: #0b160e;
 }
 
 .btn-add:hover {
   color: #1e7e34;
 }
 
-/* Existing styles remain unchanged */
 
-/* Optional: Enhance modal appearance */
 .modal-content {
   border-radius: 10px;
 }
@@ -219,7 +222,7 @@
   border-top: 1px solid #dee2e6;
 }
 
-/* Ensure existing btn-icon styles are applied */
+
 .btn-icon {
   cursor: pointer;
   font-size: 1.2rem;
@@ -245,4 +248,25 @@
 
 .btn-toggle-deactivated:hover {
   color: #0056b3;
+}
+
+
+
+.table .actions-column {
+  text-align: right; 
+  padding-right: 10px; 
+}
+
+
+.table td.actions-column {
+  vertical-align: middle; 
+}
+
+
+.actions-column .btn-icon {
+  margin-left: 1px; 
+}
+
+.actions-column .btn-icon:last-child {
+  margin-right: 0; 
 }

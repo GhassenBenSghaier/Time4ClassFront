@@ -24,7 +24,7 @@ export interface User {
   hireDate?: string;
 
   // LocalAdmin-specific fields
-  schoolName?: string;
+  schoolNameLocalAdmin?: string;
   adminCode?: string;
 
   // Teacher-specific fields
@@ -32,6 +32,7 @@ export interface User {
   qualification?: string;
   teacherRank?: string;
   schoolNameTeacher?: string; 
+  programs?: Program[];
 
   // Student-specific fields
   studentId?: string;
@@ -44,4 +45,28 @@ export interface User {
   medicalConditions?: string;
   studentStatus?: string;
   schoolNameStudent?: string; 
+}
+
+
+
+
+export interface UserResponse extends User {
+  id: number; // Required for API responses
+}
+
+export interface Program {
+  id: number;
+  name: string;
+  levelId?: number;
+  specialtyId?: number;
+}
+export interface TeacherResponseDTO {
+  id: number;
+  name: string;
+  maxHoursPerWeek: number;
+  subjectId: number;
+  subjectName: string;
+  schoolId: number;
+  schoolName: string;
+  programs: Program[];
 }

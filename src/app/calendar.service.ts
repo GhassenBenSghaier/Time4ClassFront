@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 export class CalendarService {
 //  private apiUrl = 'http://localhost:9999/api/calendar';
-  private apiUrl = 'http://192.168.157.131:30000/api/calendar';
+  private apiUrl = 'http://192.168.157.131:30000/api/calendar-service/calendar';
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): { headers: HttpHeaders } {

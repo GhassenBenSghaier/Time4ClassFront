@@ -1,0 +1,73 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Timetables Program Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/programs">Timetables Programs</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Program Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="program" class="details-container">
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Program Name:</div>
+              <div class="col-sm-8">{{ program.name }}</div>
+            </div>
+            <!-- <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Level ID:</div>
+              <div class="col-sm-8">{{ program.levelId }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Specialty ID:</div>
+              <div class="col-sm-8">{{ program.specialtyId || 'None' }}</div>
+            </div> -->
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Status:</div>
+              <div class="col-sm-8">{{ program.status || 'Active' }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Number of Subjects:</div>
+              <div class="col-sm-8">{{ program.programSubjects.length }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Total Hours:</div>
+              <div class="col-sm-8">{{ getTotalHours(program) }}</div>
+            </div>
+            <div class="mb-3" *ngIf="program.programSubjects.length > 0">
+              <div class="fw-bold mb-2">Subjects:</div>
+              <table class="table table-bordered subjects-table">
+                <thead>
+                  <tr>
+                    <th>Subject Name</th>
+                    <th>Hours per Week</th>
+                    <th>Core</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let subject of program.programSubjects">
+                    <td>{{ subjectsMap[subject.subjectId] || 'Unknown' }}</td>
+                    <td>{{ subject.hoursPerWeek }}</td>
+                    <td>{{ subject.isCore ? 'Yes' : 'No' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Programs"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

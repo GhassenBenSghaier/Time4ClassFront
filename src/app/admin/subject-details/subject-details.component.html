@@ -1,0 +1,46 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Subject Details</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/subjects-list">Subjects</a></li>
+        <li class="breadcrumb-item active">Details</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="framed-content shadow-sm">
+          <h5 class="card-title fw-semibold text-center">Subject Information</h5>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div *ngIf="subject" class="details-container">
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">ID:</div>
+              <div class="col-sm-8">{{ subject.id }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Name:</div>
+              <div class="col-sm-8">{{ subject.name }}</div>
+            </div>
+            <!-- <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Hours/Week:</div>
+              <div class="col-sm-8">{{ subject.defaultHoursPerWeek || 0 }}</div>
+            </div> -->
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Room Type:</div>
+              <div class="col-sm-8">{{ subject.roomType }}</div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <i class="fas fa-arrow-left btn-icon btn-back" (click)="goBack()" title="Back to Subjects"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<app-admin-footer></app-admin-footer>

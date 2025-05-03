@@ -1,0 +1,183 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main id="main" class="main">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold">Classes</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Classes</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- School Name Message for Local Admin -->
+        <div *ngIf="isLocalAdmin && adminSchool" class="alert alert-info mb-4">
+          Manage classes of your school: <strong>{{ adminSchool.name }}</strong>
+        </div>
+        <div class="framed-content shadow-sm">
+          <div class="card-title-container">
+            <h5 class="card-title fw-semibold">All Classes <span class="text-muted">| Total: {{ filteredClasses.length }}</span></h5>
+            <div class="action-icons">
+              <i class="fas fa-search btn-icon btn-search me-2" (click)="toggleSearch()" title="Toggle Search"></i>
+              <!-- <i class="fas fa-plus-circle btn-icon btn-add" (click)="toggleClassForm()" title="Add New Class"></i> -->
+            </div>
+          </div>
+          <!-- Class Form (Toggled) -->
+          <form [formGroup]="classForm" (ngSubmit)="onClassFormSubmit()" class="mb-4" *ngIf="showClassForm">
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <label for="schoolId" class="col-form-label">School <span class="required-asterisk">*</span></label>
+                <ng-container *ngIf="isLocalAdmin && adminSchool; else schoolDropdown">
+                  <input type="text" id="schoolId" [value]="adminSchool.name" class="form-control" disabled>
+                </ng-container>
+                <ng-template #schoolDropdown>
+                  <select id="schoolId" formControlName="schoolId" class="form-control" required>
+                    <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
+                  </select>
+                </ng-template>
+              </div>
+              <!-- <div class="col-md-3 mb-4">
+                <label for="programId" class="col-form-label">Program <span class="required-asterisk">*</span></label>
+                <select id="programId" formControlName="programId" class="form-control" required>
+                  <option *ngFor="let program of programs" [value]="program.id">{{ program.name }}</option>
+                </select>
+              </div> -->
+              <div class="col-md-4 mb-4">
+                <label for="name" class="col-form-label">Name <span class="required-asterisk">*</span></label>
+                <input type="text" id="name" formControlName="name" class="form-control" required>
+              </div>
+              <div class="col-md-4 mb-4">
+                <label for="studentCount" class="col-form-label">Student Count <span class="required-asterisk">*</span></label>
+                <input type="number" id="studentCount" formControlName="studentCount" class="form-control" min="1" required>
+              </div>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-icon btn-save me-2" title="Save Class">
+                <i class="fas fa-save"></i>
+              </button>
+              <button type="button" class="btn btn-icon btn-cancel" (click)="toggleClassForm()" title="Cancel">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </form>
+          <!-- Search Form (Toggled) -->
+          <form [formGroup]="searchForm" class="mb-4" *ngIf="showSearch">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <input type="text" formControlName="name" class="form-control" placeholder="Search by Name">
+              </div>
+              <div class="col-md-4 mb-3" *ngIf="!isLocalAdmin">
+                <select formControlName="schoolId" class="form-control">
+                  <option value="">All Schools</option>
+                  <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <select formControlName="programId" class="form-control">
+                  <option value="">All Programs</option>
+                  <option *ngFor="let program of programs" [value]="program.id">{{ program.name }}</option>
+                </select>
+              </div>
+            </div>
+          </form>
+          <!-- Classes Table -->
+          <table class="table table-hover">
+            <thead class="bg-light">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <!-- <th>School</th> -->
+                <th>Program</th>
+                <th>Student Count</th>
+                <th class="actions-column">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cls of getPaginatedClasses(); let i = index">
+                <th>{{ (currentPage - 1) * pageSize + i + 1 }}</th>
+                <td>{{ cls.name }}</td>
+                <!-- <td>{{ getSchoolName(cls.schoolId) }}</td> -->
+                <td>{{ getProgramName(cls.programId) }}</td>
+                <td>{{ getActualStudentCount(cls) }}</td>
+                <td class="actions-column">
+                  <i class="fas fa-info-circle btn-icon btn-details me-2" (click)="viewDetails(cls)" title="View Details"></i>
+                  <i class="fas fa-edit btn-icon btn-edit me-2" (click)="editClass(cls)" title="Edit Class"></i>
+                  <i class="fas fa-trash-alt btn-icon btn-delete" (click)="deleteClass(cls)" title="Delete Class"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Area -->
+        <div class="pagination-area" *ngIf="totalPages > 1">
+          <button class="btn btn-pagination" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-pagination" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by deleteClass -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="confirmDelete(false)">Cancel</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmDelete(true)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showSuccessModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Dynamic content set by showErrorModal -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-admin-footer></app-admin-footer>

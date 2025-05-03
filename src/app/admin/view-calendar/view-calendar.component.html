@@ -20,10 +20,18 @@
           <div *ngIf="!currentCalendar" class="text-center">
             <p>Loading calendar...</p>
           </div>
-          <table class="calendar-table" *ngIf="currentCalendar">
+          <div *ngIf="currentCalendar" class="calendar-controls mb-3">
+            <button class="btn btn-primary me-2" (click)="setDisplayMode('year')" [ngClass]="{'active': displayMode === 'year'}">Year View</button>
+            <button class="btn btn-primary me-2" (click)="setDisplayMode('month')" [ngClass]="{'active': displayMode === 'month'}">Month View</button>
+            <span *ngIf="displayMode === 'month'" class="month-nav">
+              <button class="btn btn-secondary me-2" (click)="previousMonth()">&lt; Previous</button>
+              <button class="btn btn-secondary" (click)="nextMonth()">Next &gt;</button>
+            </span>
+          </div>
+          <table class="calendar-table" [ngClass]="{'month-view': displayMode === 'month'}" *ngIf="currentCalendar">
             <tr *ngFor="let row of calendarRows">
               <ng-container *ngIf="row.isMonthRow; else dayRow">
-                <td colspan="11" class="month-row">{{ row.monthYear }}</td>
+                <td [attr.colspan]="displayMode === 'year' ? 11 : 7" class="month-row">{{ row.monthYear }}</td>
               </ng-container>
               <ng-template #dayRow>
                 <ng-container *ngIf="!row.isMonthRow">
@@ -43,7 +51,7 @@
                     <div class="label" *ngIf="day.event">{{ day.event }}</div>
                     <div class="label" *ngIf="day.milestone">{{ day.milestone }}</div>
                   </td>
-                  <td *ngFor="let i of [].constructor(11 - row.days.length)" class="empty"></td>
+                  <td *ngFor="let i of [].constructor((displayMode === 'year' ? 11 : 7) - row.days.length)" class="empty"></td>
                 </ng-container>
               </ng-template>
             </tr>

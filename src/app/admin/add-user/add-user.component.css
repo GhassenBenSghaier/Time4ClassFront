@@ -5,6 +5,7 @@
   min-height: 100vh;
 }
 
+
 .framed-content {
   border: 2px solid #ced4da;
   border-radius: 16px;
@@ -54,7 +55,7 @@
 }
 
 .btn-add {
-  color: #2c3340;
+  color: #161a21;
 }
 
 .btn-add:hover {

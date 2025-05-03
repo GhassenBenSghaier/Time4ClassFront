@@ -15,7 +15,11 @@ export class ProfilesComponent implements OnInit {
   userManagementActions = ['VIEW_USERS', 'ADD_USER', 'EDIT_USER', 'DELETE_USER'];
   roles = ['CENTRAL_ADMIN', 'LOCAL_ADMIN', 'TEACHER', 'STUDENT'];
   profilePermissions = ['CREATE_PROFILE', 'VIEW_PROFILES', 'EDIT_PROFILE', 'DELETE_PROFILE'];
-  calendarPermissions = ['VIEW_CALENDAR', 'ADD_CALENDAR', 'EDIT_CALENDAR', 'DELETE_CALENDAR']; // Added
+  calendarPermissions = ['VIEW_CALENDAR', 'ADD_CALENDAR', 'EDIT_CALENDAR', 'DELETE_CALENDAR'];
+  programPermissions = ['ADD_PROGRAM', 'EDIT_PROGRAM', 'VIEW_PROGRAM', 'DELETE_PROGRAM'];
+  timetablePermissions = ['VIEW_CAPACITY', 'GENERATE_TIMETABLE', 'VIEW_TIMETABLE', 'EDIT_TIMETABLE'];
+  nomenclaturePermissions = ['MANAGE_SCHOOLS', 'MANAGE_LEVELS', 'MANAGE_SPECIALTIES', 'MANAGE_SUBJECTS',
+     'MANAGE_CLASSES', 'MANAGE_CLASSROOMS', 'MANAGE_TIME_SLOTS'];
   selectedPermissions: string[] = [];
   isSubmitted: boolean = false;
 

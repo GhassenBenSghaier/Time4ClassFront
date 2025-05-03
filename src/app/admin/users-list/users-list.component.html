@@ -13,6 +13,10 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
+        <!-- School Name Message for Local Admin -->
+        <div *ngIf="isLocalAdmin && schoolName" class="alert alert-info mb-4">
+          Manage admins, teachers, and students of your school: <strong>{{ schoolName }}</strong>
+        </div>
         <div class="framed-content shadow-sm">
           <div class="card-title-container">
             <h5 class="card-title fw-semibold">All Users <span class="text-muted">| Total: {{ filteredUsers.length }}</span></h5>
@@ -63,9 +67,14 @@
               </div>
             </div>
             <div *ngIf="searchForm.get('role')?.value === 'LOCAL_ADMIN'" class="row">
-              <div class="col-md-3 mb-3">
-                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+              <div class="col-md-3 mb-3" *ngIf="isLocalAdmin && schoolName; else schoolNameInput">
+                <input type="text" [value]="schoolName" class="form-control" disabled placeholder="School Name">
               </div>
+              <ng-template #schoolNameInput>
+                <div class="col-md-3 mb-3">
+                  <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+                </div>
+              </ng-template>
               <div class="col-md-3 mb-3">
                 <input type="text" formControlName="adminCode" class="form-control" placeholder="Admin Code">
               </div>
@@ -77,6 +86,14 @@
               </div>
             </div>
             <div *ngIf="searchForm.get('role')?.value === 'TEACHER'" class="row">
+              <div class="col-md-3 mb-3" *ngIf="isLocalAdmin && schoolName; else schoolNameInput">
+                <input type="text" [value]="schoolName" class="form-control" disabled placeholder="School Name">
+              </div>
+              <ng-template #schoolNameInput>
+                <div class="col-md-3 mb-3">
+                  <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+                </div>
+              </ng-template>
               <div class="col-md-3 mb-3">
                 <input type="text" formControlName="subjectSpecialization" class="form-control" placeholder="Subject">
               </div>
@@ -87,9 +104,6 @@
                 <input type="text" formControlName="teacherRank" class="form-control" placeholder="Teacher Rank">
               </div>
               <div class="col-md-3 mb-3">
-                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
-              </div>
-              <div class="col-md-3 mb-3">
                 <input type="text" formControlName="employeeId" class="form-control" placeholder="Employee ID">
               </div>
               <div class="col-md-3 mb-3">
@@ -97,6 +111,14 @@
               </div>
             </div>
             <div *ngIf="searchForm.get('role')?.value === 'STUDENT'" class="row">
+              <div class="col-md-3 mb-3" *ngIf="isLocalAdmin && schoolName; else schoolNameInput">
+                <input type="text" [value]="schoolName" class="form-control" disabled placeholder="School Name">
+              </div>
+              <ng-template #schoolNameInput>
+                <div class="col-md-3 mb-3">
+                  <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
+                </div>
+              </ng-template>
               <div class="col-md-3 mb-3">
                 <input type="text" formControlName="studentId" class="form-control" placeholder="Student ID">
               </div>
@@ -121,9 +143,6 @@
               <div class="col-md-3 mb-3">
                 <input type="text" formControlName="medicalConditions" class="form-control" placeholder="Medical Conditions">
               </div>
-              <div class="col-md-3 mb-3">
-                <input type="text" formControlName="schoolName" class="form-control" placeholder="School Name">
-              </div>
             </div>
           </form>
           <!-- Users Table -->
@@ -135,9 +154,9 @@
                 <th>Full Name</th>
                 <th>Role</th>
                 <th>Profile</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <!-- <th>Email</th> -->
+                <!-- <th>Status</th> -->
+                <th class="actions-column">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -147,9 +166,9 @@
                 <td>{{ user.firstName }} {{ user.lastName }}</td>
                 <td>{{ user.role }}</td>
                 <td>{{ user.profile?.designation || user.profileCode || 'N/A' }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.status }}</td>
-                <td>
+                <!-- <td>{{ user.email }}</td> -->
+                <!-- <td>{{ user.status }}</td> -->
+                <td class="actions-column">
                   <i class="fas fa-info-circle btn-icon btn-details me-2" (click)="viewDetails(user)" title="View Details"></i>
                   <i class="fas fa-edit btn-icon btn-edit me-2" (click)="editUser(user)" title="Edit User"></i>
                   <i class="fas fa-ban btn-icon btn-deactivate me-2" (click)="deactivateUser(user)" title="Deactivate User" *ngIf="user.status !== 'Suspended'"></i>

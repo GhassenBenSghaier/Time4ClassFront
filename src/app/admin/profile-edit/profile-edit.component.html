@@ -117,6 +117,66 @@
                     </div>
                   </div>
                 </div>
+                <!-- Program Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProgramPermissions">
+                      Program Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseProgramPermissions" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="form-check" *ngFor="let permission of programPermissions">
+                        <input type="checkbox" class="form-check-input" [id]="permission"
+                               [checked]="isPermissionSelected(permission)"
+                               (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="permission">
+                          {{ permission.replace('_', ' ') | titlecase }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Timetable Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTimetablePermissions">
+                      Timetable Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseTimetablePermissions" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="form-check" *ngFor="let permission of timetablePermissions">
+                        <input type="checkbox" class="form-check-input" [id]="permission"
+                               [checked]="isPermissionSelected(permission)"
+                               (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="permission">
+                          {{ permission.replace('_', ' ') | titlecase }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Nomenclature Permissions -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNomenclaturePermissions">
+                      Nomenclature Permissions
+                    </button>
+                  </h2>
+                  <div id="collapseNomenclaturePermissions" class="accordion-collapse collapse" data-bs-parent="#permissionsAccordion">
+                    <div class="accordion-body">
+                      <div class="form-check" *ngFor="let permission of nomenclaturePermissions">
+                        <input type="checkbox" class="form-check-input" [id]="permission"
+                               [checked]="isPermissionSelected(permission)"
+                               (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="permission">
+                          {{ permission.replace('_', ' ') | titlecase }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="text-center mt-3">

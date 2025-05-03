@@ -1,7 +1,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center shadow-sm bg-white">
   <div class="container-fluid d-flex align-items-center justify-content-between">
     <a routerLink="/admin" class="logo d-flex align-items-center text-dark fw-bold">
-      <span class="d-none d-lg-block">Time4Class Admin</span>
+      <span class="d-none d-lg-block">   WELCOME</span>
     </a>
     <i class="bi bi-list mobile-nav-toggle fs-3 d-lg-none" (click)="toggleMobileNav()"></i>
 
@@ -57,7 +57,7 @@
         </li>-->
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="assets/images/img/profile-img.jpg" alt="Profile" class="rounded-circle me-2" style="width: 36px;">
+            <img src="assets/images/img/admin.png" alt="Profile" class="rounded-circle me-2" style="width: 36px;">
             <span class="d-none d-md-block text-dark fw-semibold">
               {{ currentUser?.firstName && currentUser?.lastName ? (currentUser?.firstName + ' ' + currentUser?.lastName) : 'Admin' }}
             </span>
