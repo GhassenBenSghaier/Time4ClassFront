@@ -69,16 +69,25 @@
                           Subject is required.
                         </div>
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <label class="col-form-label">
-                          Hours per Week <span class="required-asterisk">*</span>
+                          Hours/Week <span class="required-asterisk">*</span>
                         </label>
                         <input type="number" formControlName="hoursPerWeek" class="form-control" min="1">
                         <div *ngIf="subject.get('hoursPerWeek')?.touched && subject.get('hoursPerWeek')?.invalid" class="error">
                           Hours must be at least 1.
                         </div>
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
+                        <label class="col-form-label">
+                          Consecutive Slots
+                        </label>
+                        <input type="number" formControlName="successiveTimeslots" class="form-control" min="1" placeholder="">
+                        <div *ngIf="subject.get('successiveTimeslots')?.touched && subject.get('successiveTimeslots')?.invalid" class="error">
+                          Consecutive slots must be at least 1.
+                        </div>
+                      </div>
+                      <div class="col-2">
                         <label class="col-form-label">Core Subject</label>
                         <div class="form-check mt-2">
                           <input type="checkbox" formControlName="isCore" class="form-check-input">

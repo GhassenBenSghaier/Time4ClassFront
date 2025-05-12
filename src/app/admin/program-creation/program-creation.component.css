@@ -1,3 +1,4 @@
+
 #main {
   margin-left: 260px;
   padding: 90px 30px 30px;
@@ -141,8 +142,8 @@
     padding: 90px 15px 30px;
     width: 100%;
   }
+  .col-2,
   .col-3,
-  .col-4,
   .col-6,
   .col-12 {
     width: 100%;

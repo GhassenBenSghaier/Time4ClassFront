@@ -55,7 +55,6 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
 
     this.levelIdSubscription = this.programForm.get('levelId')?.valueChanges.subscribe((levelId) => {
       console.log('levelId changed:', levelId);
-      // Only reset specialty and update name if not loading program
       if (!this.isLoadingProgram) {
         this.programForm.get('specialtyId')?.reset();
         this.loadSpecialties();
@@ -78,7 +77,7 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
 
   loadProgram(id: number): void {
     console.log('Attempting to load program ID:', id);
-    this.isLoadingProgram = true; // Set loading flag
+    this.isLoadingProgram = true;
     this.timetablesService.getProgramById(id).subscribe({
       next: (program) => {
         console.log('Loaded program:', program);
@@ -156,7 +155,8 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
     const subjectGroup = this.fb.group({
       subjectId: [null, Validators.required],
       hoursPerWeek: [1, [Validators.required, Validators.min(1)]],
-      isCore: [false]
+      isCore: [false],
+      successiveTimeslots: [null, [Validators.min(1)]] // Optional, must be positive if set
     });
     this.subjectsArray.push(subjectGroup);
   }
@@ -167,13 +167,11 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
 
   private loadExistingProgram(program: any): void {
     console.log('Loading existing program:', program);
-    // Patch all fields except specialtyId
     this.programForm.patchValue({
       levelId: program.levelId,
       name: program.name
     }, { emitEvent: false });
 
-    // Load specialties, then set specialtyId and verify name
     const levelId = program.levelId;
     if (levelId) {
       const level = this.levels.find(l => l.id == levelId);
@@ -187,16 +185,13 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
             this.programForm.get('specialtyId')?.disable();
             this.programForm.get('specialtyId')?.setValue(null);
           }
-          // Set specialtyId
           this.programForm.patchValue({
             specialtyId: program.specialtyId || null
           }, { emitEvent: false });
-          // Ensure name is preserved (in case updateProgramName runs later)
           this.programForm.patchValue({
             name: program.name
           }, { emitEvent: false });
-          this.isLoadingProgram = false; // Clear loading flag
-          // Update name to reflect current levelId and specialtyId
+          this.isLoadingProgram = false;
           this.updateProgramName();
         },
         error: (err) => {
@@ -215,14 +210,15 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
       this.isLoadingProgram = false;
     }
 
-    // Load subjects
+    // Load subjects with successiveTimeslots
     this.subjectsArray.clear();
     if (program.programSubjects && program.programSubjects.length > 0) {
       program.programSubjects.forEach((ps: any) => {
         const subjectGroup = this.fb.group({
           subjectId: [ps.subjectId, Validators.required],
           hoursPerWeek: [ps.hoursPerWeek, [Validators.required, Validators.min(1)]],
-          isCore: [ps.isCore]
+          isCore: [ps.isCore],
+          successiveTimeslots: [ps.successiveTimeslots, [Validators.min(1)]] // Load successiveTimeslots
         });
         this.subjectsArray.push(subjectGroup);
       });
@@ -321,7 +317,8 @@ export class ProgramCreationComponent implements OnInit, OnDestroy {
       programSubjects: formValue.programSubjects.map((s: any) => ({
         subjectId: s.subjectId,
         hoursPerWeek: s.hoursPerWeek,
-        isCore: s.isCore
+        isCore: s.isCore,
+        successiveTimeslots: s.successiveTimeslots // Include successiveTimeslots
       }))
     };
 

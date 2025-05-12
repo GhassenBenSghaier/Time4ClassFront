@@ -1,3 +1,4 @@
+ 
 import { Component, OnInit } from '@angular/core';
 import { TimetablesService } from '../../timetables.service';
 import { AuthService } from '../../auth.service'; // Import AuthService
@@ -11,7 +12,7 @@ import { CapacityRequest, CapacityResponse, GenerateTimetableRequest, TimetableD
 export class TimetableManagerComponent implements OnInit {
   activeTab: 'capacity' | 'generate' | 'view' = 'capacity';
 
-  // Data for dropdowns
+
   schools: School[] = [];
   programs: Program[] = [];
   subjects: Subject[] = [];
@@ -36,6 +37,13 @@ export class TimetableManagerComponent implements OnInit {
   viewStatus: string = 'Draft';
   timetableView: TimetableDTO | null = null;
   viewError: string | null = null;
+  isDeleting: boolean = false; // New property to track deletion state
+  deleteError: string | null = null; // New property for deletion errors
+  deleteSuccess: string | null = null; // New property for deletion success message
+  showDeleteConfirmModal: boolean = false; // New flag for confirmation modal
+  showDeleteSuccessModal: boolean = false; // New flag for success modal
+  showDeleteErrorModal: boolean = false;   // New flag for error modal
+  showNoTimetableModal: boolean = false; // New flag for no timetable modal
 
   // Timetable Grid
   days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -364,29 +372,7 @@ export class TimetableManagerComponent implements OnInit {
   }
 
   // Timetable Viewing Methods
-  loadTimetable() {
-    if (this.isLocalAdmin && !this.adminSchool) {
-      this.viewError = 'No school assigned to this Local Admin.';
-      return;
-    }
-    if (this.viewSchoolId === null || this.viewSchoolId === 0) {
-      this.viewError = 'Please select a valid school.';
-      return;
-    }
-    console.log('Loading timetable for viewSchoolId:', this.viewSchoolId, 'status:', this.viewStatus);
-    this.viewError = null;
-    this.timetableView = null;
-    this.timetablesService.getTimetableBySchool(this.viewSchoolId, this.viewStatus).subscribe({
-      next: (res) => {
-        console.log('Timetable loaded:', res);
-        this.timetableView = res;
-      },
-      error: (err) => {
-        console.error('Failed to load timetable:', err);
-        this.viewError = err.message;
-      }
-    });
-  }
+
 
   // Timetable Grid Methods
   getClasses(timetable: TimetableDTO): ClassDTO[] {
@@ -403,6 +389,122 @@ export class TimetableManagerComponent implements OnInit {
     if (name.includes('math')) return 'Math';
     if (name.includes('letter') || name.includes('econ')) return 'Letters';
     return 'General';
+  }
+
+  deleteTimetableData() {
+    if (this.isLocalAdmin && !this.adminSchool) {
+      this.deleteError = 'No school assigned to this Local Admin.';
+      return;
+    }
+    if (this.viewSchoolId === null || this.viewSchoolId === 0) {
+      this.deleteError = 'Please select a valid school.';
+      return;
+    }
+    if (!confirm('Are you sure you want to delete all timetables, schedules, and classes for this school? This action cannot be undone.')) {
+      return;
+    }
+
+    this.deleteError = null;
+    this.deleteSuccess = null;
+    this.isDeleting = true;
+    this.timetableView = null;
+
+    console.log('Deleting timetable data for schoolId:', this.viewSchoolId);
+    this.timetablesService.deleteTimetableData(this.viewSchoolId).subscribe({
+      next: (response) => {
+        console.log('Timetable data deleted:', response);
+        this.deleteSuccess = response;
+        this.isDeleting = false;
+      },
+      error: (err) => {
+        console.error('Failed to delete timetable data:', err);
+        this.deleteError = err.message;
+        this.isDeleting = false;
+      }
+    });
+  }
+
+loadTimetable() {
+    if (this.viewSchoolId === null || this.viewSchoolId === 0) {
+      this.viewError = 'Please select a valid school.';
+      return;
+    }
+    this.viewError = null;
+    this.timetableView = null;
+
+    console.log('Loading timetable for schoolId:', this.viewSchoolId, 'with status:', this.viewStatus);
+    this.timetablesService.getTimetableBySchool(this.viewSchoolId, this.viewStatus).subscribe({
+      next: (response) => {
+        console.log('Timetable loaded:', response);
+        if (response) {
+          this.timetableView = response;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load timetable:', err);
+        if (err.message === 'NO_TIMETABLE_FOUND') {
+          this.showNoTimetableModal = true;
+        } else {
+          this.viewError = err.message;
+        }
+      }
+    });
+  }
+
+  openDeleteConfirmModal() {
+    if (this.isLocalAdmin && !this.adminSchool) {
+      this.deleteError = 'No school assigned to this Local Admin.';
+      this.showDeleteErrorModal = true;
+      return;
+    }
+    if (this.viewSchoolId === null || this.viewSchoolId === 0) {
+      this.deleteError = 'Please select a valid school.';
+      this.showDeleteErrorModal = true;
+      return;
+    }
+    this.showDeleteConfirmModal = true;
+  }
+
+  confirmDelete() {
+    this.showDeleteConfirmModal = false;
+    this.deleteError = null;
+    this.deleteSuccess = null;
+    this.isDeleting = true;
+    this.timetableView = null;
+
+    console.log('Deleting timetable data for schoolId:', this.viewSchoolId);
+    this.timetablesService.deleteTimetableData(this.viewSchoolId!).subscribe({
+      next: (response) => {
+        console.log('Timetable data deleted:', response);
+        this.deleteSuccess = response;
+        this.showDeleteSuccessModal = true;
+        this.isDeleting = false;
+      },
+      error: (err) => {
+        console.error('Failed to delete timetable data:', err);
+        this.deleteError = err.message;
+        this.showDeleteErrorModal = true;
+        this.isDeleting = false;
+      }
+    });
+  }
+
+  closeDeleteConfirmModal() {
+    this.showDeleteConfirmModal = false;
+  }
+
+  closeDeleteSuccessModal() {
+    this.showDeleteSuccessModal = false;
+    this.deleteSuccess = null;
+  }
+
+  closeDeleteErrorModal() {
+    this.showDeleteErrorModal = false;
+    this.deleteError = null;
+  }
+
+closeNoTimetableModal() {
+    this.showNoTimetableModal = false;
   }
 
   getScheduleForCell(timetable: TimetableDTO, classId: number, day: string, timeslot: string): ScheduleDTO | null {

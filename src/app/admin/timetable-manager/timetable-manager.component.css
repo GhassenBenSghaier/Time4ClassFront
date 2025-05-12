@@ -358,3 +358,21 @@
   border-radius: 6px;
   transition: border-color 0.3s;
 }
+
+/* Add to existing CSS */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-danger:disabled {
+  background-color: #e4606d;
+  border-color: #e4606d;
+  cursor: not-allowed;
+}

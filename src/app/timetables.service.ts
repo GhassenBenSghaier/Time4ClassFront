@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth.service';
 import { CapacityRequest, CapacityResponse, GenerateTimetableRequest, TimetableDTO, School, Program, Subject } from './Models/timetable.model';
 
@@ -10,7 +10,8 @@ import { CapacityRequest, CapacityResponse, GenerateTimetableRequest, TimetableD
 })
 export class TimetablesService {
 //  private baseUrl = 'http://localhost:9999/api/new-timetable-service/api/v1/timetable';
-  private baseUrl = 'http://192.168.157.131:30000/api/new-timetable-service/api/v1/timetable';
+   private baseUrl = 'http://192.168.157.131:30000/api/new-timetable-service/api/v1/timetable';
+
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -49,8 +50,23 @@ export class TimetablesService {
       .pipe(catchError(this.handleError));
   }
 
-  getTimetableBySchool(schoolId: number, status: string = 'Draft'): Observable<TimetableDTO> {
+  getTimetableBySchool(schoolId: number, status: string = 'Draft'): Observable<TimetableDTO | null> {
     return this.http.get<TimetableDTO>(`${this.baseUrl}/school/${schoolId}?status=${status}`, { headers: this.getHeaders() })
+      .pipe(
+        map((response) => response), // Return the timetable if found
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            // Throw a custom error to indicate no timetable exists
+            return throwError(() => new Error('NO_TIMETABLE_FOUND'));
+          }
+          // Handle other errors using the existing handleError method
+          return this.handleError(error);
+        })
+      );
+  }
+
+  deleteTimetableData(schoolId: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/school/${schoolId}`, { headers: this.getHeaders(), responseType: 'text' })
       .pipe(catchError(this.handleError));
   }
 
